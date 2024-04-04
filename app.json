@@ -4,7 +4,20 @@
     "web": {
       "bundler": "metro"
     },
-    "name": "jobsift",
-    "slug": "jobsift"
+    "name": "Jobseeker",
+    "slug": "jobsift",
+    "icon": "./assets/icons/slack.png",
+    "extra": {
+      "eas": {
+        "projectId": "2bde9bd8-3a03-4dff-87d7-90739b58f757"
+      }
+    },
+    "android": {
+      "package": "com.bankugrp.jobseeker",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/slack.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    }
   }
 }

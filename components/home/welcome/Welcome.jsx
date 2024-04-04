@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 import styles from "./welcome.style";
 import { icons, SIZES } from "../../../constants";
 
-const jobTypes = ["Full-time", "Part-time", "Contractor"];
+const jobTypes = ["Full-time", "Part-time", "Remote"];
 
 const Welcome = ({ searchTerm, setSearchTerm, handleClick }) => {
   const router = useRouter();
@@ -21,7 +21,7 @@ const Welcome = ({ searchTerm, setSearchTerm, handleClick }) => {
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.userName}>Hello Adrian</Text>
+        <Text style={styles.userName}>Hello User,</Text>
         <Text style={styles.welcomeMessage}>Find your perfect job</Text>
       </View>
 
@@ -52,11 +52,18 @@ const Welcome = ({ searchTerm, setSearchTerm, handleClick }) => {
               style={styles.tab(activeJobType, item)}
               onPress={() => {
                 setActiveJobType(item);
-                router.push(`/search/${item}`);
+                if (item === "Remote") {
+                  router.push(`/search/${item}?remote_jobs_only=true`);
+                }
+                else {
+                  router.push(`/search/${item} India`);
+                }
               }}
             >
               <Text style={styles.tabText(activeJobType, item)}>{item}</Text>
             </TouchableOpacity>
+            // /------------------------------------------
+
           )}
           keyExtractor={(item) => item}
           contentContainerStyle={{ columnGap: SIZES.small }}

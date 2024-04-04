@@ -19,7 +19,7 @@ import {
 } from "../../components";
 import { COLORS, icons, SIZES } from "../../constants";
 import useFetch from "../../hook/useFetch";
-
+import { Share } from "react-native";
 const tabs = ["About", "Qualifications", "Responsibilities"];
 
 const JobDetails = () => {
@@ -80,10 +80,22 @@ const JobDetails = () => {
               iconUrl={icons.left}
               dimension='60%'
               handlePress={() => router.back()}
+              showModal={false}
             />
           ),
           headerRight: () => (
-            <ScreenHeaderBtn iconUrl={icons.share} dimension='60%' />
+            <ScreenHeaderBtn iconUrl={icons.share} dimension='60%'
+              handlePress={() => {
+                const jobLink = data[0]?.job_google_link;
+                Share.share({
+                  message: `Check out this job:\n ${jobLink}`,
+                  url: jobLink,
+                  // You can also add a URL to share
+                  // url: '<job link here>'
+                });
+              }}
+              showModal={false}
+            />
           ),
           headerTitle: "",
         }}

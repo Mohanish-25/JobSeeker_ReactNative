@@ -20,19 +20,24 @@ const JobSearch = () => {
     const handleSearch = async () => {
         setSearchLoader(true);
         setSearchResult([])
+        const remoteJobsOnly = params.remote_jobs_only || "false";
+
+        // api keys monya : db90fbb132msh50ebad9a6bdc91ap1f8539jsn1d952bf78508
 
         try {
             const options = {
                 method: "GET",
                 url: `https://jsearch.p.rapidapi.com/search`,
                 headers: {
-                    "X-RapidAPI-Key": '',
+                    "X-RapidAPI-Key": 'db90fbb132msh50ebad9a6bdc91ap1f8539jsn1d952bf78508',
                     "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
                 },
                 params: {
-                    query: params.id,
+                    query: params.id + "India",
                     page: page.toString(),
+                    remote_jobs_only: remoteJobsOnly, //added for remote jobs 
                 },
+
             };
 
             const response = await axios.request(options);

@@ -10,7 +10,7 @@ import useFetch from "../../../hook/useFetch";
 const Nearbyjobs = () => {
   const router = useRouter();
   const { data, isLoading, error } = useFetch("search", {
-    query: "React Native developer",
+    query: "React Native developer, India",
     num_pages: "1",
   });
 
