@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { COLORS, icons, images, SIZES } from "../constants";
 import {
   Nearbyjobs,
@@ -8,13 +9,36 @@ import {
   ScreenHeaderBtn,
   Welcome,
 } from "../components";
-import { BackHandler } from 'react-native';
-import profileIcon from '../assets/icons/kendre.jpg';
-
+import { BackHandler } from "react-native";
+import profileIcon from "../assets/icons/kendre.jpg";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
 const Home = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const navigation = useNavigation();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsSignedIn(true);
+      } else {
+        setIsSignedIn(false);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "auth" }], // Replace 'SignIn' with the name of your sign in screen
+        });
+      }
+    });
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
+  if (!isSignedIn) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
@@ -23,17 +47,55 @@ const Home = () => {
           headerStyle: { backgroundColor: COLORS.lightWhite },
           headerShadowVisible: false,
           headerLeft: () => (
-            <ScreenHeaderBtn iconUrl={icons.menu} dimension='60%' options={[
-              { label: 'Saved Jobs', icon: 'content-save', action: () => console.log('Option 1 clicked') },
-              { label: 'About Us', icon: 'information', action: () => console.log('Option 2 clicked') },
-            ]} showModal={true} />
-
+            <ScreenHeaderBtn
+              iconUrl={icons.menu}
+              dimension="60%"
+              options={[
+                {
+                  label: "Saved Jobs",
+                  icon: "content-save",
+                  action: () => console.log("Option 1 clicked"),
+                },
+                {
+                  label: "About Us",
+                  icon: "information",
+                  action: () => console.log("Option 2 clicked"),
+                },
+              ]}
+              showModal={true}
+            />
           ),
           headerRight: () => (
-            <ScreenHeaderBtn iconUrl={profileIcon} dimension='100%' options={[
-              { label: 'My Profile', icon: 'account', action: () => console.log('Option 3 clicked') },
-              { label: 'Exit', icon: 'exit-to-app', action: () => BackHandler.exitApp() },
-            ]} showModal={true} />
+            <ScreenHeaderBtn
+              iconUrl={profileIcon}
+              dimension="100%"
+              options={[
+                {
+                  label: "My Profile",
+                  icon: "account",
+                  action: () => console.log("Option 3 clicked"),
+                },
+                {
+                  label: "Logout",
+                  icon: "exit-to-app",
+                  action: () => {
+                    const auth = getAuth();
+                    signOut(auth)
+                      .then(() => {
+                        // Sign-out successful.
+
+                        console.log("User signed out");
+                        // navigation.navigate("auth");
+                      })
+                      .catch((error) => {
+                        // An error happened.
+                        console.log("Error signing out: ", error);
+                      });
+                  },
+                },
+              ]}
+              showModal={true}
+            />
           ),
           headerTitle: "",
         }}
@@ -51,7 +113,7 @@ const Home = () => {
             setSearchTerm={setSearchTerm}
             handleClick={() => {
               if (searchTerm) {
-                router.push(`/search/${searchTerm}`)
+                router.push(`/search/${searchTerm}`);
               }
             }}
           />

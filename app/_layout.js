@@ -4,10 +4,10 @@ import { useFonts } from "expo-font";
 
 // SplashScreen.preventAutoHideAsync();
 
-export const unstable_settings = {
-  // Ensure any route can link back to `/`
-  initialRouteName: "home",
-};
+// export const unstable_settings = {
+//   // Ensure any route can link back to `/`
+//   initialRouteName: "auth",
+// };
 
 const Layout = () => {
   const [fontsLoaded] = useFonts({
@@ -21,10 +21,10 @@ const Layout = () => {
   }
 
   return (
-    <Stack initialRouteName="home">
-      <Stack.Screen name="home" />
+    <Stack initialRouteName="auth">
+      <Stack.Screen options={{ header: () => null }} name="auth" />
     </Stack>
-  )
+  );
 };
 
 export default Layout;
