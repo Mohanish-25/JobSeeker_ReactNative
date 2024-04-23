@@ -9,20 +9,24 @@ import {
 } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import ErrorMessage from "../components/ErrorMessage";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email().required().label("Email"),
+  password: Yup.string().required().min(6).label("Password"),
+});
 
 export default function SignInScreen() {
   const [isSignUpMode, setIsSignUpMode] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const auth = getAuth();
   const navigation = useNavigation();
 
-  const onSignIn = () => {
+  const onSignIn = (email, password) => {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        setEmail("");
-        setPassword("");
         navigation.reset({
           index: 0,
           routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
@@ -33,11 +37,9 @@ export default function SignInScreen() {
       });
   };
 
-  const onSignUp = () => {
+  const onSignUp = (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
-        setEmail("");
-        setPassword("");
         navigation.reset({
           index: 0,
           routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
@@ -50,43 +52,75 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={setEmail}
-        value={email}
-        textContentType="emailAddress"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        onChangeText={setPassword}
-        value={password}
-        secureTextEntry
-        textContentType="password"
-      />
-
-      {isSignUpMode ? (
-        <>
-          <TouchableOpacity style={styles.btn} onPress={onSignUp}>
-            <Text style={styles.btnText}>Sign Up</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setIsSignUpMode(false)}>
-            <Text style={styles.switchText2}>Already registered?</Text>
-            <Text style={styles.switchText}>Sign in instead</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <TouchableOpacity style={styles.btn} onPress={onSignIn}>
-            <Text style={styles.btnText}>Sign In</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setIsSignUpMode(true)}>
-            <Text style={styles.switchText2}>Not registered?</Text>
-            <Text style={styles.switchText}>Sign up instead</Text>
-          </TouchableOpacity>
-        </>
-      )}
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+        }}
+        onSubmit={(values) => {
+          try {
+            isSignUpMode
+              ? onSignUp(values.email, values.password)
+              : onSignIn(values.email, values.password);
+          } catch (e) {
+            console.log(e);
+          }
+        }}
+        validationSchema={validationSchema}
+      >
+        {({
+          handleChange,
+          handleSubmit,
+          errors,
+          values,
+          setFieldTouched,
+          touched,
+        }) => (
+          <>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              onChangeText={handleChange("email")}
+              value={values.email}
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              onBlur={() => setFieldTouched("email")}
+            />
+            <ErrorMessage visible={touched.email} error={errors.email} />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              onChangeText={handleChange("password")}
+              value={values.password}
+              secureTextEntry
+              textContentType="password"
+              onBlur={() => setFieldTouched("password")}
+            />
+            <ErrorMessage error={errors.password} visible={touched.password} />
+            {isSignUpMode ? (
+              <>
+                <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
+                  <Text style={styles.btnText}>Sign Up</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setIsSignUpMode(false)}>
+                  <Text style={styles.switchText2}>Already registered?</Text>
+                  <Text style={styles.switchText}>Sign in instead</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
+                  <Text style={styles.btnText}>Sign In</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setIsSignUpMode(true)}>
+                  <Text style={styles.switchText2}>Not registered?</Text>
+                  <Text style={styles.switchText}>Sign up instead</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </>
+        )}
+      </Formik>
     </View>
   );
 }
