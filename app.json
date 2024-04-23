@@ -18,6 +18,9 @@
         "foregroundImage": "./assets/icons/slack.png",
         "backgroundColor": "#FFFFFF"
       }
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
