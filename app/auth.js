@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function SignInScreen() {
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -54,6 +55,7 @@ export default function SignInScreen() {
         placeholder="Email"
         onChangeText={setEmail}
         value={email}
+        textContentType="emailAddress"
       />
       <TextInput
         style={styles.input}
@@ -61,13 +63,30 @@ export default function SignInScreen() {
         onChangeText={setPassword}
         value={password}
         secureTextEntry
+        textContentType="password"
       />
-      <TouchableOpacity style={styles.btn} onPress={onSignIn}>
-        <Text style={styles.btnText}>Sign In</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.btn} onPress={onSignUp}>
-        <Text style={styles.btnText}>Sign Up</Text>
-      </TouchableOpacity>
+
+      {isSignUpMode ? (
+        <>
+          <TouchableOpacity style={styles.btn} onPress={onSignUp}>
+            <Text style={styles.btnText}>Sign Up</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsSignUpMode(false)}>
+            <Text style={styles.switchText2}>Already registered?</Text>
+            <Text style={styles.switchText}>Sign in instead</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <TouchableOpacity style={styles.btn} onPress={onSignIn}>
+            <Text style={styles.btnText}>Sign In</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsSignUpMode(true)}>
+            <Text style={styles.switchText2}>Not registered?</Text>
+            <Text style={styles.switchText}>Sign up instead</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 }
@@ -100,5 +119,17 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 24,
     textAlign: "center",
+  },
+  switchText: {
+    color: "blue",
+    textAlign: "center",
+    marginTop: 10,
+    fontSize: 16,
+  },
+  switchText2: {
+    color: "black",
+    textAlign: "center",
+    marginTop: 10,
+    fontSize: 16,
   },
 });
