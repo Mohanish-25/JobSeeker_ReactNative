@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
     // marginTop: 22
   },
   modalView: {
-    width: Dimensions.get('window').width,
-    backgroundColor: 'grey',
+    width: Dimensions.get("window").width,
+    backgroundColor: COLORS.primary,
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
@@ -19,20 +19,22 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-
   },
   openButton: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.tertiary,
     // borderRadius: 20,
     padding: 10,
-    // elevation: 2,
+    margin: 5,
+    elevation: 2,
     marginBottom: 10,
-    width: Dimensions.get('window').width,
+    width: Dimensions.get("window").width,
   },
   textStyle: {
-    color: "black",
+    color: "white",
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: SIZES.large,
+    padding: 5,
   },
 
   btnContainer: {

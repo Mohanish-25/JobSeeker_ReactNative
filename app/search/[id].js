@@ -31,12 +31,14 @@ const JobSearch = () => {
     // api keys monya : db90fbb132msh50ebad9a6bdc91ap1f8539jsn1d952bf78508
     // removed 8
 
+    //latest c0e1c799b5msh72677d2536ba9c9p145b59jsnc83e5a5b10fd
     try {
       const options = {
         method: "GET",
         url: `https://jsearch.p.rapidapi.com/search`,
         headers: {
-          "X-RapidAPI-Key": "db90fbb132msh50ebad9a6bdc91ap1f8539jsn1d952bf7850",
+          "X-RapidAPI-Key":
+            "c0e1c799b5msh72677d2536ba9c9p145b59jsnc83e5a5b10fd",
           "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
         },
         params: {

@@ -54,7 +54,7 @@ const Home = () => {
                 {
                   label: "Saved Jobs",
                   icon: "content-save",
-                  action: () => console.log("Option 1 clicked"),
+                  action: () => navigation.navigate("likedJobs"),
                 },
                 {
                   label: "About Us",

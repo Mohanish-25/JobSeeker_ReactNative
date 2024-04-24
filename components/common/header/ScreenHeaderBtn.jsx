@@ -35,7 +35,7 @@ const ScreenHeaderBtn = ({ iconUrl, dimension, handlePress, options, showModal }
                   }}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                    <MaterialCommunityIcons name={option.icon} size={36} color="black" />
+                    <MaterialCommunityIcons name={option.icon} size={36} color="white" />
                     <Text style={styles.textStyle}>{option.label}</Text>
                   </View>
                 </TouchableHighlight>

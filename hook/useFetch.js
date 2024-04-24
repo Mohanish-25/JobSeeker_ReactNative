@@ -10,11 +10,13 @@ const useFetch = (endpoint, query) => {
     method: "GET",
     url: `https://jsearch.p.rapidapi.com/${endpoint}`,
     headers: {
-      "X-RapidAPI-Key": "51c2c56dc5msh55d530580fe0743p128630jsnf60e8bd3248",
+      "X-RapidAPI-Key": "c0e1c799b5msh72677d2536ba9c9p145b59jsnc83e5a5b10fd",
       "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
     },
     params: { ...query },
   };
+  // clg mail latest  = c0e1c799b5msh72677d2536ba9c9p145b59jsnc83e5a5b10fd
+
   // 51c2c56dc5msh55d530580fe0743p128630jsnf60e8bd32481
   // removed 1
 
