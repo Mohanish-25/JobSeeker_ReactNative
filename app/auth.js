@@ -12,6 +12,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import ErrorMessage from "../components/ErrorMessage";
+import AppTextInput from "../components/AppTextInput";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
@@ -77,26 +79,35 @@ export default function SignInScreen() {
           touched,
         }) => (
           <>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
+            <AppTextInput
+              icon={"email"}
+              placeholder={"Enter your Email"}
+              textContentType={"emailAddress"}
               onChangeText={handleChange("email")}
-              value={values.email}
-              keyboardType="email-address"
-              textContentType="emailAddress"
               onBlur={() => setFieldTouched("email")}
+              value={values.email}
+              autoCapitalize={"none"}
             />
             <ErrorMessage visible={touched.email} error={errors.email} />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
+            <AppTextInput
+              icon={"lock"}
+              placeholder={"Enter your Password"}
+              textContentType={"password"}
               onChangeText={handleChange("password")}
+              onBlur={() => setFieldTouched("password")}
               value={values.password}
               secureTextEntry
-              textContentType="password"
-              onBlur={() => setFieldTouched("password")}
+              autoCapitalize={"none"}
             />
             <ErrorMessage error={errors.password} visible={touched.password} />
+            <TouchableOpacity>
+              <MaterialCommunityIcons
+                name={"google"}
+                size={24}
+                style={styles.signIcon}
+              />
+            </TouchableOpacity>
+
             {isSignUpMode ? (
               <>
                 <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
@@ -165,5 +176,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
     fontSize: 16,
+  },
+  signIcon: {
+    color: COLORS.primary,
+    textAlign: "center",
+    marginTop: 10,
   },
 });
