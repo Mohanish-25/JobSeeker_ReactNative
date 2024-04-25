@@ -52,6 +52,11 @@ const Home = () => {
               dimension="60%"
               options={[
                 {
+                  label: "My Profile",
+                  icon: "account",
+                  action: () => console.log("Option 3 clicked"),
+                },
+                {
                   label: "Saved Jobs",
                   icon: "content-save",
                   action: () => navigation.navigate("likedJobs"),
@@ -61,19 +66,10 @@ const Home = () => {
                   icon: "information",
                   action: () => console.log("Option 2 clicked"),
                 },
-              ]}
-              showModal={true}
-            />
-          ),
-          headerRight: () => (
-            <ScreenHeaderBtn
-              iconUrl={profileIcon}
-              dimension="100%"
-              options={[
                 {
-                  label: "My Profile",
-                  icon: "account",
-                  action: () => console.log("Option 3 clicked"),
+                  label: "Settings",
+                  icon: "wrench",
+                  action: () => console.log("Option 2 clicked"),
                 },
                 {
                   label: "Logout",
@@ -95,6 +91,15 @@ const Home = () => {
                 },
               ]}
               showModal={true}
+            />
+          ),
+          headerRight: () => (
+            <ScreenHeaderBtn
+              iconUrl={profileIcon}
+              dimension="100%"
+              options={[]}
+              showModal={false}
+              handlePress={() => console.log("Profile clicked")}
             />
           ),
           headerTitle: "",
