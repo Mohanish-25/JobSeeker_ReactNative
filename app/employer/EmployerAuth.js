@@ -36,10 +36,7 @@ export default function SignInScreen() {
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           console.log("happening" + email + password);
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
-          });
+          navigation.navigate("employer/employerHome");
         })
         .catch((error) => {
           console.log(error);
@@ -63,10 +60,7 @@ export default function SignInScreen() {
           console.log(e);
         }
 
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
-        });
+        navigation.reset(navigation.navigate("employer/employerHome"));
       })
       .catch((error) => {
         console.log(error);

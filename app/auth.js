@@ -100,13 +100,13 @@ export default function SignInScreen() {
               autoCapitalize={"none"}
             />
             <ErrorMessage error={errors.password} visible={touched.password} />
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <MaterialCommunityIcons
                 name={"google"}
                 size={24}
                 style={styles.signIcon}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {isSignUpMode ? (
               <>
@@ -120,7 +120,7 @@ export default function SignInScreen() {
                   <Text style={styles.switchText2}>Already registered?</Text>
                   <Text style={styles.switchText}> Sign in instead</Text>
                 </TouchableOpacity>
-                <Text style={styles.empText}>OR</Text>
+                <Text style={styles.empText}>Or</Text>
                 <TouchableOpacity style={styles.btn} onPress={() => {}}>
                   <Text style={styles.btnText}>Employer Signup</Text>
                 </TouchableOpacity>
@@ -137,7 +137,7 @@ export default function SignInScreen() {
                   <Text style={styles.switchText2}>Not registered?</Text>
                   <Text style={styles.switchText}> Sign up instead</Text>
                 </TouchableOpacity>
-                <Text style={styles.empText}>OR</Text>
+                <Text style={styles.empText}>Or</Text>
                 <TouchableOpacity
                   style={styles.btn}
                   onPress={() => navigation.navigate("employer/EmployerAuth")}
@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   empText: {
-    color: "green",
     textAlign: "center",
     fontSize: 20,
   },
