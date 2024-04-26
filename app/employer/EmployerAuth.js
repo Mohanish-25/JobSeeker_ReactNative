@@ -1,28 +1,32 @@
-import React, { useState } from "react";
-import { Button, TextInput, View, StyleSheet, Text } from "react-native";
-import { Stack, useRouter } from "expo-router";
-import { COLORS, icons, images, SIZES } from "../constants";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import {
+  createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Formik } from "formik";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Yup from "yup";
-import ErrorMessage from "../components/ErrorMessage";
-import AppTextInput from "../components/AppTextInput";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ErrorMessage from "../../components/ErrorMessage";
+import AppTextInput from "../../components/AppTextInput";
+import { COLORS } from "../../constants";
+import { Stack, useRouter } from "expo-router";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
   password: Yup.string().required().min(6).label("Password"),
+  companyName: Yup.string().required().label("Company Name"),
+  companyLocation: Yup.string().required().label("Company Location"),
 });
 
 export default function SignInScreen() {
   const [isSignUpMode, setIsSignUpMode] = useState(false);
-
+  const db = getFirestore();
   const auth = getAuth();
   const navigation = useNavigation();
 
@@ -39,9 +43,20 @@ export default function SignInScreen() {
       });
   };
 
-  const onSignUp = (email, password) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
+  const onSignUp = async (email, password, companyName, companyLocation) => {
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        try {
+          setDoc(doc(collection(db, "employers"), user.uid), {
+            email: email,
+            companyName: companyName,
+            companyLocation: companyLocation,
+          });
+        } catch (e) {
+          console.log(e);
+        }
+
         navigation.reset({
           index: 0,
           routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
@@ -58,11 +73,18 @@ export default function SignInScreen() {
         initialValues={{
           email: "",
           password: "",
+          companyName: "",
+          companyLocation: "",
         }}
         onSubmit={(values) => {
           try {
             isSignUpMode
-              ? onSignUp(values.email, values.password)
+              ? onSignUp(
+                  values.email,
+                  values.password,
+                  values.companyName,
+                  values.companyLocation
+                )
               : onSignIn(values.email, values.password);
           } catch (e) {
             console.log(e);
@@ -81,7 +103,7 @@ export default function SignInScreen() {
           <>
             <AppTextInput
               icon={"email"}
-              placeholder={"Enter your Email"}
+              placeholder={"Enter your Company Email"}
               textContentType={"emailAddress"}
               onChangeText={handleChange("email")}
               onBlur={() => setFieldTouched("email")}
@@ -100,16 +122,32 @@ export default function SignInScreen() {
               autoCapitalize={"none"}
             />
             <ErrorMessage error={errors.password} visible={touched.password} />
-            <TouchableOpacity>
-              <MaterialCommunityIcons
-                name={"google"}
-                size={24}
-                style={styles.signIcon}
-              />
-            </TouchableOpacity>
-
             {isSignUpMode ? (
               <>
+                <AppTextInput
+                  icon={"office-building"}
+                  placeholder={"Enter your Company Name"}
+                  onChangeText={handleChange("companyName")}
+                  onBlur={() => setFieldTouched("companyName")}
+                  value={values.companyName}
+                  autoCapitalize={"none"}
+                />
+                <ErrorMessage
+                  error={errors.companyName}
+                  visible={touched.companyName}
+                />
+
+                <AppTextInput
+                  icon={"map-marker"}
+                  placeholder={"Enter your Company Location"}
+                  onChangeText={handleChange("companyLocation")}
+                  onBlur={() => setFieldTouched("companyLocation")}
+                  value={values.companyLocation}
+                />
+                <ErrorMessage
+                  error={errors.companyLocation}
+                  visible={touched.companyLocation}
+                />
                 <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
                   <Text style={styles.btnText}>Sign Up</Text>
                 </TouchableOpacity>
@@ -119,10 +157,6 @@ export default function SignInScreen() {
                 >
                   <Text style={styles.switchText2}>Already registered?</Text>
                   <Text style={styles.switchText}> Sign in instead</Text>
-                </TouchableOpacity>
-                <Text style={styles.empText}>OR</Text>
-                <TouchableOpacity style={styles.btn} onPress={() => {}}>
-                  <Text style={styles.btnText}>Employer Signup</Text>
                 </TouchableOpacity>
               </>
             ) : (
@@ -136,13 +170,6 @@ export default function SignInScreen() {
                 >
                   <Text style={styles.switchText2}>Not registered?</Text>
                   <Text style={styles.switchText}> Sign up instead</Text>
-                </TouchableOpacity>
-                <Text style={styles.empText}>OR</Text>
-                <TouchableOpacity
-                  style={styles.btn}
-                  onPress={() => navigation.navigate("employer/EmployerAuth")}
-                >
-                  <Text style={styles.btnText}>Employer Login</Text>
                 </TouchableOpacity>
               </>
             )}
