@@ -20,8 +20,8 @@ import { getFirestore } from "firebase/firestore";
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
   password: Yup.string().required().min(6).label("Password"),
-  companyName: Yup.string().required().label("Company Name"),
-  companyLocation: Yup.string().required().label("Company Location"),
+  companyName: Yup.string().label("Company Name"),
+  companyLocation: Yup.string().label("Company Location"),
 });
 
 export default function SignInScreen() {
@@ -31,16 +31,22 @@ export default function SignInScreen() {
   const navigation = useNavigation();
 
   const onSignIn = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
+    try {
+      console.log("doingSignIn" + email + password);
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          console.log("happening" + email + password);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onSignUp = async (email, password, companyName, companyLocation) => {
@@ -136,18 +142,19 @@ export default function SignInScreen() {
                   error={errors.companyName}
                   visible={touched.companyName}
                 />
-
                 <AppTextInput
                   icon={"map-marker"}
-                  placeholder={"Enter your Company Location"}
+                  placeholder={"Enter your Country"}
                   onChangeText={handleChange("companyLocation")}
                   onBlur={() => setFieldTouched("companyLocation")}
                   value={values.companyLocation}
+                  autoCapitalize={"none"}
                 />
                 <ErrorMessage
                   error={errors.companyLocation}
                   visible={touched.companyLocation}
                 />
+
                 <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
                   <Text style={styles.btnText}>Sign Up</Text>
                 </TouchableOpacity>
@@ -181,6 +188,16 @@ export default function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
+  locationView: {
+    flexDirection: "row",
+  },
+  locationText: {
+    flexDirection: "row",
+    padding: 15,
+    marginVertical: 10,
+    fontSize: 20,
+    color: "gray",
+  },
   container: {
     flex: 1,
     justifyContent: "center",
