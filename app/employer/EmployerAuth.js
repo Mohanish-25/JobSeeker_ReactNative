@@ -56,6 +56,7 @@ export default function SignInScreen() {
             email: email,
             companyName: companyName,
             companyLocation: companyLocation,
+            role: "employer",
           });
         } catch (e) {
           console.log(e);

@@ -4,6 +4,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native";
+import { collection, doc, getDoc } from "firebase/firestore";
+import { db } from "./firebase";
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync();
@@ -26,12 +28,18 @@ const Layout = () => {
     const auth = getAuth();
 
     // Listen for auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // User is signed in, navigate to the main app screen
-        navigation.navigate("home");
+        const userDoc = await getDoc(
+          doc(collection(db, "employers"), user.uid)
+        );
+        const userData = userDoc.data();
+        if (userData && userData.role === "employer") {
+          navigation.navigate("employer/employerHome");
+        } else {
+          navigation.navigate("home");
+        }
       } else {
-        // User is signed out, navigate to the auth screen
         navigation.navigate("auth");
       }
     });
@@ -45,7 +53,7 @@ const Layout = () => {
   }
 
   return (
-    <Stack initialRouteName="auth">
+    <Stack>
       <Stack.Screen options={{ header: () => null }} name="auth" />
     </Stack>
   );

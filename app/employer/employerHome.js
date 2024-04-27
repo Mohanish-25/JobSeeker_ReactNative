@@ -12,8 +12,10 @@ import { BackHandler } from "react-native";
 import profileIcon from "../../assets/icons/kendre.jpg";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { COLORS, icons, images, SIZES } from "../../constants";
+import createJobs from "./createJobs";
+import BottomBar from "../../components/BottomBar";
 
-const Home = () => {
+const employerHome = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const navigation = useNavigation();
@@ -26,10 +28,6 @@ const Home = () => {
         setIsSignedIn(true);
       } else {
         setIsSignedIn(false);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "EmployerAuth" }], // Replace 'SignIn' with the name of your sign in screen
-        });
       }
     });
     // Cleanup subscription on unmount
@@ -127,8 +125,9 @@ const Home = () => {
           <Nearbyjobs />
         </View>
       </ScrollView>
+      <BottomBar navigation={navigation} />
     </SafeAreaView>
   );
 };
 
-export default Home;
+export default employerHome;
