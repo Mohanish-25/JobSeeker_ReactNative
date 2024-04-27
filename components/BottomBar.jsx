@@ -3,33 +3,32 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS } from '../constants';
 import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useRoute } from '@react-navigation/native';
 
 const BottomBar = ({ navigation }) => {
+    const route = useRoute();
 
-    const [selectedScreen, setSelectedScreen] = useState('employer/employerHome');
     const handlePress = (screenName) => {
-        setSelectedScreen(screenName);
         navigation.navigate(screenName);
     };
-
 
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => handlePress('employer/employerHome')}>
                 <View style={styles.iconContainer}>
-                    <AntDesign name="home" size={28} color={selectedScreen === 'employer/employerHome' ? 'black' : 'grey'} />
+                    <AntDesign name="home" size={28} color={route.name === 'employer/employerHome' ? 'black' : 'grey'} />
                     <Text style={styles.text}>Home</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handlePress('employer/createJobs')}>
                 <View style={styles.iconContainer}>
-                    <MaterialIcons name="create" size={28} color={selectedScreen === 'employer/createJobs' ? 'black' : 'grey'} />
+                    <MaterialIcons name="create" size={28} color={route.name === 'employer/createJobs' ? 'black' : 'grey'} />
                     <Text style={styles.text}>Create Job</Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handlePress('Screen3')}>
+            <TouchableOpacity onPress={() => handlePress('employer/employerProfile')}>
                 <View style={styles.iconContainer}>
-                    <AntDesign name="user" size={28} color={selectedScreen === 'Screen3' ? 'black' : 'grey'} />
+                    <AntDesign name="user" size={28} color={route.name === 'employer/employerProfile' ? 'black' : 'grey'} />
                     <Text style={styles.text}>Profile</Text>
                 </View>
             </TouchableOpacity>
