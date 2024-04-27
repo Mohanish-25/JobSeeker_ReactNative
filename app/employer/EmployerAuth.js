@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Yup from "yup";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -16,6 +16,7 @@ import { COLORS } from "../../constants";
 import { Stack, useRouter } from "expo-router";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
+import Logo from "../../assets/logo.png";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
@@ -69,6 +70,7 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.container}>
+      <Image style={styles.logoImg} source={Logo} />
       <Formik
         initialValues={{
           email: "",
@@ -182,6 +184,12 @@ export default function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
+  logoImg: {
+    width: 250,
+    height: 250,
+    alignSelf: "center",
+    marginBottom: 5,
+  },
   locationView: {
     flexDirection: "row",
   },
@@ -194,7 +202,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 16,
   },
   inlineText: {

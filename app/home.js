@@ -10,7 +10,7 @@ import {
   Welcome,
 } from "../components";
 import { BackHandler } from "react-native";
-import profileIcon from "../assets/icons/kendre.jpg";
+import profileIcon from "../assets/logo.png";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
 const Home = () => {

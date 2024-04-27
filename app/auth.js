@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextInput, View, StyleSheet, Text } from "react-native";
+import { Button, TextInput, View, StyleSheet, Text, Image } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { COLORS, icons, images, SIZES } from "../constants";
 import {
@@ -14,6 +14,8 @@ import * as Yup from "yup";
 import ErrorMessage from "../components/ErrorMessage";
 import AppTextInput from "../components/AppTextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import Logo from "../assets/logo.png";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
@@ -54,6 +56,7 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.container}>
+      <Image style={styles.logoImg} source={Logo} />
       <Formik
         initialValues={{
           email: "",
@@ -154,9 +157,15 @@ export default function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
+  logoImg: {
+    width: 250,
+    height: 250,
+    alignSelf: "center",
+    marginBottom: 5,
+  },
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 16,
   },
   inlineText: {
