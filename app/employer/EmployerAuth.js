@@ -14,7 +14,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import AppTextInput from "../../components/AppTextInput";
 import { COLORS } from "../../constants";
 import { Stack, useRouter } from "expo-router";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import Logo from "../../assets/logo.png";
 
@@ -35,9 +35,25 @@ export default function SignInScreen() {
     try {
       console.log("doingSignIn" + email + password);
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          console.log("happening" + email + password);
-          navigation.navigate("employer/employerHome");
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const docRef = doc(db, "employers", user.uid);
+          getDoc(docRef).then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const userData = docSnapshot.data();
+              if (userData.role === "employer") {
+                navigation.navigate("employer/employerHome");
+              } else {
+                console.log("You are not an employer");
+                // Sign out the user
+                auth.signOut();
+              }
+            } else {
+              console.log("No such user!");
+              // Sign out the user
+              auth.signOut();
+            }
+          });
         })
         .catch((error) => {
           console.log(error);

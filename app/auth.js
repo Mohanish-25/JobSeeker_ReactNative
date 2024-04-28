@@ -28,17 +28,36 @@ export default function SignInScreen() {
   const auth = getAuth();
   const navigation = useNavigation();
 
-  const onSignIn = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
+  const onSignIn = async (email, password) => {
+    try {
+      console.log("doingSignIn" + email + password);
+      await signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const docRef = doc(db, "employers", user.uid);
+          getDoc(docRef).then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const userData = docSnapshot.data();
+              if (userData.role != "employer") {
+                auth.signOut();
+              } else {
+                console.log("You are not an employer");
+                navigation.navigate("home");
+                // Sign out the user
+              }
+            } else {
+              console.log("No such user!");
+              // Sign out the user
+              auth.signOut();
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onSignUp = (email, password) => {
