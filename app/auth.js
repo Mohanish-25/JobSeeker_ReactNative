@@ -83,7 +83,9 @@ export default function SignInScreen() {
         }) => (
           <>
             <AppTextInput
-              icon={"email"}
+              IconComponent={() => (
+                <MaterialCommunityIcons name="email" size={22} color="black" />
+              )}
               placeholder={"Enter your Email"}
               textContentType={"emailAddress"}
               onChangeText={handleChange("email")}
@@ -93,7 +95,9 @@ export default function SignInScreen() {
             />
             <ErrorMessage visible={touched.email} error={errors.email} />
             <AppTextInput
-              icon={"lock"}
+              IconComponent={() => (
+                <MaterialCommunityIcons name="lock" size={22} color="black" />
+              )}
               placeholder={"Enter your Password"}
               textContentType={"password"}
               onChangeText={handleChange("password")}

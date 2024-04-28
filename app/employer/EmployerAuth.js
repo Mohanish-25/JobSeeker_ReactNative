@@ -105,7 +105,9 @@ export default function SignInScreen() {
         }) => (
           <>
             <AppTextInput
-              icon={"email"}
+              IconComponent={() => (
+                <MaterialCommunityIcons name="email" size={22} color="black" />
+              )}
               placeholder={"Enter your Company Email"}
               textContentType={"emailAddress"}
               onChangeText={handleChange("email")}
@@ -115,7 +117,9 @@ export default function SignInScreen() {
             />
             <ErrorMessage visible={touched.email} error={errors.email} />
             <AppTextInput
-              icon={"lock"}
+              IconComponent={() => (
+                <MaterialCommunityIcons name="lock" size={22} color="black" />
+              )}
               placeholder={"Enter your Password"}
               textContentType={"password"}
               onChangeText={handleChange("password")}
@@ -128,7 +132,13 @@ export default function SignInScreen() {
             {isSignUpMode ? (
               <>
                 <AppTextInput
-                  icon={"office-building"}
+                  IconComponent={() => (
+                    <MaterialCommunityIcons
+                      name="office-building"
+                      size={22}
+                      color="black"
+                    />
+                  )}
                   placeholder={"Enter your Company Name"}
                   onChangeText={handleChange("companyName")}
                   onBlur={() => setFieldTouched("companyName")}
@@ -140,7 +150,13 @@ export default function SignInScreen() {
                   visible={touched.companyName}
                 />
                 <AppTextInput
-                  icon={"map-marker"}
+                  IconComponent={() => (
+                    <MaterialCommunityIcons
+                      name="map-marker"
+                      size={22}
+                      color="black"
+                    />
+                  )}
                   placeholder={"Enter your Country"}
                   onChangeText={handleChange("companyLocation")}
                   onBlur={() => setFieldTouched("companyLocation")}
