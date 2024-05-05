@@ -65,7 +65,7 @@ const Home = () => {
                 {
                   label: "About Us",
                   icon: "information",
-                  action: () => console.log("Option 2 clicked"),
+                  action: () => navigation.navigate("about"),
                 },
                 {
                   label: "Settings",

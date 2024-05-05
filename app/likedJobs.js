@@ -11,7 +11,9 @@ import {
 } from "react-native";
 // import styles from "../components/common/cards/nearby/nearbyjobcard.style";
 import { checkImageURL } from "../utils";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { ScreenHeaderBtn } from "../components";
+import { COLORS, icons } from "../constants";
 const LikedJobsScreen = () => {
   const [likedJobs, setLikedJobs] = useState([]);
   const router = useRouter();
@@ -34,31 +36,47 @@ const LikedJobsScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={likedJobs}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <>
-            <TouchableOpacity
-              style={styles.jobItem}
-              onPress={() => router.push(`/job-details/${item.job_id} `)}
-            >
-              <Text style={styles.jobTitle}>{item.jobTitle}</Text>
-              <Text style={styles.employerName}>{item.employerName}</Text>
-              <Text>{item.jobCountry}</Text>
-              <Image
-                source={{
-                  uri: checkImageURL(item.jobLogo)
-                    ? item.jobLogo
-                    : "https://t4.ftcdn.net/jpg/05/05/61/73/360_F_505617309_NN1CW7diNmGXJfMicpY9eXHKV4sqzO5H.jpg",
-                }}
-              />
-            </TouchableOpacity>
-          </>
-        )}
+    <>
+      <Stack.Screen
+        options={{
+          headerStyle: { backgroundColor: COLORS.lightWhite },
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <ScreenHeaderBtn
+              iconUrl={icons.left}
+              dimension="60%"
+              handlePress={() => router.back()}
+            />
+          ),
+          headerTitle: "",
+        }}
       />
-    </View>
+      <View style={styles.container}>
+        <FlatList
+          data={likedJobs}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <>
+              <TouchableOpacity
+                style={styles.jobItem}
+                onPress={() => router.push(`/job-details/${item.job_id} `)}
+              >
+                <Text style={styles.jobTitle}>{item.jobTitle}</Text>
+                <Text style={styles.employerName}>{item.employerName}</Text>
+                <Text>{item.jobCountry}</Text>
+                <Image
+                  source={{
+                    uri: checkImageURL(item.jobLogo)
+                      ? item.jobLogo
+                      : "https://t4.ftcdn.net/jpg/05/05/61/73/360_F_505617309_NN1CW7diNmGXJfMicpY9eXHKV4sqzO5H.jpg",
+                  }}
+                />
+              </TouchableOpacity>
+            </>
+          )}
+        />
+      </View>
+    </>
   );
 };
 
