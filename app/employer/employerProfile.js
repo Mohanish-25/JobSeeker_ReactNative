@@ -26,20 +26,22 @@ function employerProfile(props) {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {employerData && (
-        <View style={styles.infoContainer}>
-          <Text style={styles.text}>Email: {employerData.email}</Text>
-          <Text style={styles.text}>
-            Company Name: {employerData.companyName}
-          </Text>
-          <Text style={styles.text}>
-            Location: {employerData.companyLocation}
-          </Text>
-        </View>
-      )}
+    <>
+      <View style={styles.container}>
+        {employerData && (
+          <View style={styles.infoContainer}>
+            <Text style={styles.text}>Email: {employerData.email}</Text>
+            <Text style={styles.text}>
+              Company Name: {employerData.companyName}
+            </Text>
+            <Text style={styles.text}>
+              Location: {employerData.companyLocation}
+            </Text>
+          </View>
+        )}
+      </View>
       <BottomBar navigation={navigation} />
-    </View>
+    </>
   );
 }
 
