@@ -21,6 +21,8 @@ import { COLORS, icons, SIZES } from "../../constants";
 import useFetch from "../../hook/useFetch";
 import { Share } from "react-native";
 const tabs = ["About", "Qualifications", "Responsibilities"];
+import { collection, addDoc } from "firebase/firestore";
+import { auth, db } from "../firebase"; // assuming you have a firebase config file
 
 const JobDetails = () => {
   const params = useSearchParams();
@@ -35,17 +37,16 @@ const JobDetails = () => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    refetch()
-    setRefreshing(false)
+    refetch();
+    setRefreshing(false);
   }, []);
-
 
   const displayTabContent = () => {
     switch (activeTab) {
       case "Qualifications":
         return (
           <Specifics
-            title='Qualifications'
+            title="Qualifications"
             points={data[0].job_highlights?.Qualifications ?? ["N/A"]}
           />
         );
@@ -58,7 +59,7 @@ const JobDetails = () => {
       case "Responsibilities":
         return (
           <Specifics
-            title='Responsibilities'
+            title="Responsibilities"
             points={data[0].job_highlights?.Responsibilities ?? ["N/A"]}
           />
         );
@@ -66,6 +67,24 @@ const JobDetails = () => {
       default:
         return null;
     }
+  };
+
+  const handleLike = async () => {
+    const userId = auth.currentUser.uid;
+    const likedJobsRef = collection(db, `likedJobs/${userId}/jobs`);
+
+    // Create a new object with only the properties you want to save
+    const jobDetailsObject = {
+      jobTitle: data[0].job_title,
+      employerName: data[0].employer_name,
+      jobCountry: data[0].job_country,
+      jobLogo: data[0].employer_logo,
+      jobId: data[0].job_id,
+
+      // Add more properties here
+    };
+
+    await addDoc(likedJobsRef, jobDetailsObject);
   };
 
   return (
@@ -78,13 +97,15 @@ const JobDetails = () => {
           headerLeft: () => (
             <ScreenHeaderBtn
               iconUrl={icons.left}
-              dimension='60%'
+              dimension="60%"
               handlePress={() => router.back()}
               showModal={false}
             />
           ),
           headerRight: () => (
-            <ScreenHeaderBtn iconUrl={icons.share} dimension='60%'
+            <ScreenHeaderBtn
+              iconUrl={icons.share}
+              dimension="60%"
               handlePress={() => {
                 const jobLink = data[0]?.job_google_link;
                 Share.share({
@@ -102,12 +123,14 @@ const JobDetails = () => {
       />
 
       <>
-        <ScrollView showsVerticalScrollIndicator={false}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         >
           {isLoading ? (
-            <ActivityIndicator size='large' color={COLORS.primary} />
+            <ActivityIndicator size="large" color={COLORS.primary} />
           ) : error ? (
             <Text>Something went wrong</Text>
           ) : data.length === 0 ? (
@@ -132,7 +155,13 @@ const JobDetails = () => {
           )}
         </ScrollView>
 
-        <JobFooter url={data[0]?.job_google_link ?? 'https://careers.google.com/jobs/results/'} />
+        <JobFooter
+          url={
+            data[0]?.job_google_link ??
+            "https://careers.google.com/jobs/results/"
+          }
+          onLike={handleLike}
+        />
       </>
     </SafeAreaView>
   );

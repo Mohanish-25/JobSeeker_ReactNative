@@ -1,14 +1,22 @@
 import { View, Text, TouchableOpacity, Image, Linking } from "react-native";
-
+import * as firebase from 'firebase/app';
 import styles from "./footer.style";
 import { icons } from "../../../constants";
+import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from "../../../app/firebase";
+const Footer = ({ url, onLike, isLiked }) => {
 
-const Footer = ({ url }) => {
+
+  const handleLikeButtonPress = () => {
+    onLike();
+    // Add any other code you want to execute when the like button is clicked
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.likeBtn}>
+      <TouchableOpacity style={styles.likeBtn} onPress={handleLikeButtonPress} >
         <Image
-          source={icons.heartOutline}
+          source={isLiked ? icons.heart : icons.heartOutline}
           resizeMode='contain'
           style={styles.likeBtnImage}
         />

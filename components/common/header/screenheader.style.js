@@ -4,35 +4,43 @@ import { COLORS, SIZES } from "../../../constants";
 
 const styles = StyleSheet.create({
   centeredView: {
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     flex: 1,
     alignItems: "center",
     // marginTop: 22
   },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Change this to adjust the amount of "blur"
+  },
   modalView: {
-    width: Dimensions.get('window').width,
-    backgroundColor: 'grey',
-    borderRadius: 20,
+    width: Dimensions.get("window").width - 70,
+    marginRight: 70,
+    height: Dimensions.get("window").height,
+    backgroundColor: COLORS.lightWhite,
+    // borderRadius: 20,
     padding: 35,
     alignItems: "center",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
+    // borderBottomLeftRadius: 0,
+    // borderBottomRightRadius: 0,
   },
   openButton: {
-    backgroundColor: "white",
+    // backgroundColor: COLORS.tertiary,
     // borderRadius: 20,
     padding: 10,
-    // elevation: 2,
+    margin: 5,
+    elevation: 2,
     marginBottom: 10,
-    width: Dimensions.get('window').width,
+    width: Dimensions.get("window").width - 70,
   },
   textStyle: {
     color: "black",
-    fontWeight: "bold",
-    textAlign: "center"
+    fontWeight: "normal",
+    textAlign: "left",
+    fontSize: SIZES.medium,
+    padding: 3,
   },
 
   btnContainer: {

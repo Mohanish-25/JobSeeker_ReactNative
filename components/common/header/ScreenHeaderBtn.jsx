@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, TouchableOpacity, Modal, View, Text, TouchableHighlight, TouchableWithoutFeedback } from "react-native";
 import styles from "./screenheader.style";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Animated } from 'react-native';
 
 const ScreenHeaderBtn = ({ iconUrl, dimension, handlePress, options, showModal }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -12,10 +13,20 @@ const ScreenHeaderBtn = ({ iconUrl, dimension, handlePress, options, showModal }
       handlePress();
     }
   };
+  const [modalAnimatedValue] = useState(new Animated.Value(-500)); // Assuming -500 is off the left of the screen
+
+  useEffect(() => {
+    Animated.timing(modalAnimatedValue, {
+      toValue: modalVisible ? 0 : -500,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, [modalVisible]);
+
   return (
     <View>
       <Modal
-        animationType="slide"
+        animationType="none"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
@@ -23,25 +34,29 @@ const ScreenHeaderBtn = ({ iconUrl, dimension, handlePress, options, showModal }
         }}
       >
         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={[styles.centeredView, styles.overlay]}>
-            <View style={styles.modalView}>
-              {showModal && options && options.map((option, index) => (
-                <TouchableHighlight
-                  key={index}
-                  style={{ ...styles.openButton }}
-                  onPress={() => {
-                    setModalVisible(!modalVisible);
-                    option.action();
-                  }}
-                >
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                    <MaterialCommunityIcons name={option.icon} size={36} color="black" />
-                    <Text style={styles.textStyle}>{option.label}</Text>
-                  </View>
-                </TouchableHighlight>
-              ))}
-            </View>
+          <View style={styles.overlay}>
+            <Animated.View style={{ transform: [{ translateX: modalAnimatedValue }], ...styles.centeredView, ...styles.overlay }}>
+              <View style={styles.modalView}>
+                {showModal && options && options.map((option, index) => (
+                  <TouchableHighlight
+                    key={index}
+                    underlayColor={'#f0f0f0'}
+                    style={{ ...styles.openButton }}
+                    onPress={() => {
+                      setModalVisible(!modalVisible);
+                      option.action();
+                    }}
+                  >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                      <MaterialCommunityIcons name={option.icon} size={30} color="black" />
+                      <Text style={styles.textStyle}>{option.label}</Text>
+                    </View>
+                  </TouchableHighlight>
+                ))}
+              </View>
+            </Animated.View>
           </View>
+
         </TouchableWithoutFeedback>
       </Modal>
 
