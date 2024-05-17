@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from "rea
 import styles from "../home/nearby/nearbyjobs.style";
 import { COLORS, SIZES, SHADOWS } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
+import { showToast } from "../../utils";
 
 const EmployerCard = () => {
     const router = useRouter();
@@ -13,14 +14,14 @@ const EmployerCard = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Employer Jobs </Text>
-                <TouchableOpacity disabled>
+                <TouchableOpacity onPress={() => showToast('Coming Soon')} >
                     <Text style={styles.headerBtn}>Show all</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.cardsContainer}>
                 <TouchableOpacity onPress={() => navigation.navigate('employer/EmployerCreatedJobs')} >
-                    <Text>JobRole and Location here</Text>
+                    <Text>EmployerJobs Posting here</Text>
                 </TouchableOpacity>
 
             </View>

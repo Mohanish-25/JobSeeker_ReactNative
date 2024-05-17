@@ -28,19 +28,12 @@ const JobSearch = () => {
     setSearchResult([]);
     const remoteJobsOnly = params.remote_jobs_only || "false";
 
-    // api keys monya : db90fbb132msh50ebad9a6bdc91ap1f8539jsn1d952bf78508
-    // removed 8
-
-    //latest c0e1c799b5msh72677d2536ba9c9p145b59jsnc83e5a5b10fd expired
-    //April end keys: bee5694526msh6fec5df64b72349p19ee60jsn9e6d23248d2b
-    // May Start Mine = 51c2c56dc5msh55d530580fe0743p128630jsnf60e8bd32481
     try {
       const options = {
         method: "GET",
         url: `https://jsearch.p.rapidapi.com/search`,
         headers: {
-          "X-RapidAPI-Key":
-            "51c2c56dc5msh55d530580fe0743p128630jsnf60e8bd32481",
+          "X-RapidAPI-Key": process.env.REACT_APP_API_KEY_,
           "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
         },
         params: {

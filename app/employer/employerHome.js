@@ -9,11 +9,12 @@ import {
   Welcome,
 } from "../../components";
 import { BackHandler } from "react-native";
-import profileIcon from "../../assets/icons/kendre.jpg";
+import profileIcon from "../../assets/logo.png";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { COLORS, icons, images, SIZES } from "../../constants";
 import createJobs from "./createJobs";
 import BottomBar from "../../components/BottomBar";
+import { showToast } from "../../utils";
 
 const employerHome = () => {
   const router = useRouter();
@@ -52,7 +53,7 @@ const employerHome = () => {
                 {
                   label: "Employer Profile",
                   icon: "account",
-                  action: () => console.log("Option 3 clicked"),
+                  action: () => showToast("Profile Coming Soon"),
                 },
                 {
                   label: "Saved Jobs",
@@ -62,12 +63,12 @@ const employerHome = () => {
                 {
                   label: "About Us",
                   icon: "information",
-                  action: () => console.log("Option 2 clicked"),
+                  action: () => navigation.navigate("about"),
                 },
                 {
                   label: "Settings",
                   icon: "wrench",
-                  action: () => console.log("Option 2 clicked"),
+                  action: () => showToast("Settings Coming Soon"),
                 },
                 {
                   label: "Logout",
@@ -97,7 +98,7 @@ const employerHome = () => {
               dimension="100%"
               options={[]}
               showModal={false}
-              handlePress={() => console.log("Profile clicked")}
+              handlePress={() => showToast("Profile Coming Soon")}
             />
           ),
           headerTitle: "",

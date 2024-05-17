@@ -13,6 +13,7 @@ import { BackHandler } from "react-native";
 import profileIcon from "../assets/logo.png";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import EmployerCard from "../components/common/EmployerCard";
+import { showToast } from "../utils";
 
 const Home = () => {
   const router = useRouter();
@@ -55,7 +56,7 @@ const Home = () => {
                 {
                   label: "My Profile",
                   icon: "account",
-                  action: () => console.log("Option 3 clicked"),
+                  action: () => showToast("Profile Coming Soon"),
                 },
                 {
                   label: "Saved Jobs",
@@ -70,7 +71,7 @@ const Home = () => {
                 {
                   label: "Settings",
                   icon: "wrench",
-                  action: () => console.log("Option 2 clicked"),
+                  action: () => showToast("Settings Coming Soon"),
                 },
                 {
                   label: "Logout",
@@ -100,7 +101,7 @@ const Home = () => {
               dimension="100%"
               options={[]}
               showModal={false}
-              handlePress={() => console.log("Profile clicked")}
+              handlePress={() => showToast("Profile Coming Soon")}
             />
           ),
           headerTitle: "",

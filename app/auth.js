@@ -147,7 +147,10 @@ export default function SignInScreen() {
                   <Text style={styles.switchText}> Sign in instead</Text>
                 </TouchableOpacity>
                 <Text style={styles.empText}>Or</Text>
-                <TouchableOpacity style={styles.btn} onPress={() => {}}>
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={() => navigation.navigate("employer/EmployerAuth")}
+                >
                   <Text style={styles.btnText}>Employer Signup</Text>
                 </TouchableOpacity>
               </>
