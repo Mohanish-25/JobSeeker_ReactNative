@@ -7,15 +7,16 @@ import {
 } from "firebase/auth";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Yup from "yup";
 import ErrorMessage from "../../components/ErrorMessage";
 import AppTextInput from "../../components/AppTextInput";
 import { COLORS } from "../../constants";
 import { Stack, useRouter } from "expo-router";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
+import Logo from "../../assets/logo.png";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
@@ -34,11 +35,24 @@ export default function SignInScreen() {
     try {
       console.log("doingSignIn" + email + password);
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          console.log("happening" + email + password);
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const docRef = doc(db, "employers", user.uid);
+          getDoc(docRef).then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const userData = docSnapshot.data();
+              if (userData.role === "employer") {
+                navigation.navigate("employer/employerHome");
+              } else {
+                console.log("You are not an employer");
+                // Sign out the user
+                auth.signOut();
+              }
+            } else {
+              console.log("No such user!");
+              // Sign out the user
+              auth.signOut();
+            }
           });
         })
         .catch((error) => {
@@ -58,15 +72,13 @@ export default function SignInScreen() {
             email: email,
             companyName: companyName,
             companyLocation: companyLocation,
+            role: "employer",
           });
         } catch (e) {
           console.log(e);
         }
 
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
-        });
+        navigation.reset(navigation.navigate("employer/employerHome"));
       })
       .catch((error) => {
         console.log(error);
@@ -75,6 +87,7 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.container}>
+      <Image style={styles.logoImg} source={Logo} />
       <Formik
         initialValues={{
           email: "",
@@ -108,7 +121,9 @@ export default function SignInScreen() {
         }) => (
           <>
             <AppTextInput
-              icon={"email"}
+              IconComponent={() => (
+                <MaterialCommunityIcons name="email" size={22} color="black" />
+              )}
               placeholder={"Enter your Company Email"}
               textContentType={"emailAddress"}
               onChangeText={handleChange("email")}
@@ -118,7 +133,9 @@ export default function SignInScreen() {
             />
             <ErrorMessage visible={touched.email} error={errors.email} />
             <AppTextInput
-              icon={"lock"}
+              IconComponent={() => (
+                <MaterialCommunityIcons name="lock" size={22} color="black" />
+              )}
               placeholder={"Enter your Password"}
               textContentType={"password"}
               onChangeText={handleChange("password")}
@@ -131,7 +148,13 @@ export default function SignInScreen() {
             {isSignUpMode ? (
               <>
                 <AppTextInput
-                  icon={"office-building"}
+                  IconComponent={() => (
+                    <MaterialCommunityIcons
+                      name="office-building"
+                      size={22}
+                      color="black"
+                    />
+                  )}
                   placeholder={"Enter your Company Name"}
                   onChangeText={handleChange("companyName")}
                   onBlur={() => setFieldTouched("companyName")}
@@ -143,7 +166,13 @@ export default function SignInScreen() {
                   visible={touched.companyName}
                 />
                 <AppTextInput
-                  icon={"map-marker"}
+                  IconComponent={() => (
+                    <MaterialCommunityIcons
+                      name="map-marker"
+                      size={22}
+                      color="black"
+                    />
+                  )}
                   placeholder={"Enter your Country"}
                   onChangeText={handleChange("companyLocation")}
                   onBlur={() => setFieldTouched("companyLocation")}
@@ -188,6 +217,12 @@ export default function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
+  logoImg: {
+    width: 250,
+    height: 250,
+    alignSelf: "center",
+    marginBottom: 5,
+  },
   locationView: {
     flexDirection: "row",
   },
@@ -200,7 +235,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 16,
   },
   inlineText: {

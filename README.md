@@ -1,4 +1,3 @@
-
 # JobCentral 🏢
 
 JobCentral is Mobile Application created with React-Native + Expo.

@@ -9,7 +9,7 @@ import useFetch from "../../../hook/useFetch";
 
 const Nearbyjobs = () => {
   const router = useRouter();
-  const { data, isLoading, error } = useFetch("search", {
+  const { data, isLoading, error, refetch } = useFetch("search", {
     query: "React Native developer, India",
     num_pages: "1",
   });
@@ -18,8 +18,8 @@ const Nearbyjobs = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Nearby jobs</Text>
-        <TouchableOpacity>
-          <Text style={styles.headerBtn}>Show all</Text>
+        <TouchableOpacity onPress={refetch}>
+          <Text style={styles.headerBtn}>Refresh Jobs</Text>
         </TouchableOpacity>
       </View>
 

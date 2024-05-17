@@ -4,23 +4,24 @@
     "web": {
       "bundler": "metro"
     },
-    "name": "Jobseeker",
-    "slug": "jobsift",
-    "icon": "./assets/icons/slack.png",
-    "extra": {
-      "eas": {
-        "projectId": "2bde9bd8-3a03-4dff-87d7-90739b58f757"
-      }
-    },
+    "name": "JobCentral",
+    "slug": "jobcentral",
+    "icon": "./assets/icon2.png",
     "android": {
       "package": "com.bankugrp.jobseeker",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/slack.png",
+        "foregroundImage": "./assets/icons/icon2.png",
         "backgroundColor": "#FFFFFF"
       }
     },
-    "plugins": [
-      "expo-router"
-    ]
+    "plugins": ["expo-router"],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "48f1f908-7670-487a-9c81-9e913de07961"
+      }
+    }
   }
 }

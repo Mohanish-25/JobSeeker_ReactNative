@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextInput, View, StyleSheet, Text } from "react-native";
+import { Button, TextInput, View, StyleSheet, Text, Image } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { COLORS, icons, images, SIZES } from "../constants";
 import {
@@ -15,6 +15,8 @@ import ErrorMessage from "../components/ErrorMessage";
 import AppTextInput from "../components/AppTextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import Logo from "../assets/logo.png";
+
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
   password: Yup.string().required().min(6).label("Password"),
@@ -26,17 +28,36 @@ export default function SignInScreen() {
   const auth = getAuth();
   const navigation = useNavigation();
 
-  const onSignIn = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "home" }], // Replace 'Home' with the name of your home screen
+  const onSignIn = async (email, password) => {
+    try {
+      console.log("doingSignIn" + email + password);
+      await signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const docRef = doc(db, "employers", user.uid);
+          getDoc(docRef).then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const userData = docSnapshot.data();
+              if (userData.role != "employer") {
+                auth.signOut();
+              } else {
+                console.log("You are not an employer");
+                navigation.navigate("home");
+                // Sign out the user
+              }
+            } else {
+              console.log("No such user!");
+              // Sign out the user
+              auth.signOut();
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onSignUp = (email, password) => {
@@ -54,6 +75,7 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.container}>
+      <Image style={styles.logoImg} source={Logo} />
       <Formik
         initialValues={{
           email: "",
@@ -80,7 +102,9 @@ export default function SignInScreen() {
         }) => (
           <>
             <AppTextInput
-              icon={"email"}
+              IconComponent={() => (
+                <MaterialCommunityIcons name="email" size={22} color="black" />
+              )}
               placeholder={"Enter your Email"}
               textContentType={"emailAddress"}
               onChangeText={handleChange("email")}
@@ -90,7 +114,9 @@ export default function SignInScreen() {
             />
             <ErrorMessage visible={touched.email} error={errors.email} />
             <AppTextInput
-              icon={"lock"}
+              IconComponent={() => (
+                <MaterialCommunityIcons name="lock" size={22} color="black" />
+              )}
               placeholder={"Enter your Password"}
               textContentType={"password"}
               onChangeText={handleChange("password")}
@@ -100,13 +126,13 @@ export default function SignInScreen() {
               autoCapitalize={"none"}
             />
             <ErrorMessage error={errors.password} visible={touched.password} />
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <MaterialCommunityIcons
                 name={"google"}
                 size={24}
                 style={styles.signIcon}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {isSignUpMode ? (
               <>
@@ -120,8 +146,11 @@ export default function SignInScreen() {
                   <Text style={styles.switchText2}>Already registered?</Text>
                   <Text style={styles.switchText}> Sign in instead</Text>
                 </TouchableOpacity>
-                <Text style={styles.empText}>OR</Text>
-                <TouchableOpacity style={styles.btn} onPress={() => {}}>
+                <Text style={styles.empText}>Or</Text>
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={() => navigation.navigate("employer/EmployerAuth")}
+                >
                   <Text style={styles.btnText}>Employer Signup</Text>
                 </TouchableOpacity>
               </>
@@ -137,7 +166,7 @@ export default function SignInScreen() {
                   <Text style={styles.switchText2}>Not registered?</Text>
                   <Text style={styles.switchText}> Sign up instead</Text>
                 </TouchableOpacity>
-                <Text style={styles.empText}>OR</Text>
+                <Text style={styles.empText}>Or</Text>
                 <TouchableOpacity
                   style={styles.btn}
                   onPress={() => navigation.navigate("employer/EmployerAuth")}
@@ -154,9 +183,15 @@ export default function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
+  logoImg: {
+    width: 250,
+    height: 250,
+    alignSelf: "center",
+    marginBottom: 5,
+  },
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 16,
   },
   inlineText: {
@@ -165,7 +200,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   empText: {
-    color: "green",
     textAlign: "center",
     fontSize: 20,
   },
