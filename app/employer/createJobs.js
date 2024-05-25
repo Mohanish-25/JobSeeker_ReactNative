@@ -36,7 +36,9 @@ function createJobs() {
         qualifications: qualifications,
         responsibilities: responsibilities,
         about: about,
-        employerId: auth.currentUser.uid, // store the ID of the employer who posted the job
+        employerId: auth.currentUser.uid,
+        companyName: auth.companyName,
+        // store the ID of the employer who posted the job
         // companyName: auth.currentUser.displayName, // assuming the company name is stored in displayName
       });
       navigation.navigate("employer/employerHome");

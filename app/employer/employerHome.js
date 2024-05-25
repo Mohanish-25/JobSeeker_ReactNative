@@ -15,6 +15,7 @@ import { COLORS, icons, images, SIZES } from "../../constants";
 import createJobs from "./createJobs";
 import BottomBar from "../../components/BottomBar";
 import { showToast } from "../../utils";
+import EmployerJobs from "../../components/home/employerJobs/EmployerJobs";
 
 const employerHome = () => {
   const router = useRouter();
@@ -123,6 +124,7 @@ const employerHome = () => {
           />
 
           <Popularjobs />
+          <EmployerJobs />
           <Nearbyjobs />
         </View>
       </ScrollView>
