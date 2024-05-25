@@ -1,21 +1,18 @@
-import { doc, collection, getDocs, getDoc } from "firebase/firestore";
-import { auth, db } from "./firebase"; // assuming you have a firebase config file
-import { useState, useEffect } from "react";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import {
-  StyleSheet,
-  View,
   FlatList,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  Image,
+  View,
 } from "react-native";
-// import styles from "../components/common/cards/nearby/nearbyjobcard.style";
-import { checkImageURL } from "../utils";
+import { auth, db } from "./firebase";
+import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
+import { deleteDoc } from "firebase/firestore";
 import { ScreenHeaderBtn } from "../components";
 import { COLORS, icons } from "../constants";
-import { deleteDoc } from "firebase/firestore";
-import { Ionicons } from "@expo/vector-icons";
 
 const LikedJobsScreen = () => {
   const [likedJobs, setLikedJobs] = useState([]);
@@ -62,16 +59,23 @@ const LikedJobsScreen = () => {
               <TouchableOpacity
                 style={styles.jobItem}
                 onPress={async () => {
-                  const jobRef = doc(db, "jobs", item.id);
+                  const userId = auth.currentUser.uid;
+                  const jobRef = doc(db, `likedJobs/${userId}/jobs`, item.id);
                   const jobSnapshot = await getDoc(jobRef);
+                  console.log(item);
                   if (jobSnapshot.exists()) {
-                    router.push(`/employer/${item.id}`);
-                  } else {
-                    router.push(`/job-details/${item.job_id}`);
+                    const jobData = jobSnapshot.data();
+                    if (jobData.type === "employer") {
+                      router.push(`/employer/${item.jobId}`);
+                    } else if (jobData.type === "api") {
+                      router.push(`/job-details/${item.jobId}`);
+                    }
                   }
                 }}
               >
-                {/* <Image
+                {/* 
+               
+                <Image
                   source={{
                     uri:
                       item.jobLogo !== "logo here"

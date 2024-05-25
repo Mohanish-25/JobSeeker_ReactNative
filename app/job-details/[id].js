@@ -1,14 +1,16 @@
 import { Stack, useRouter, useSearchParams } from "expo-router";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
   ActivityIndicator,
   RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { Share } from "react-native";
 import {
   Company,
   JobAbout,
@@ -19,11 +21,9 @@ import {
 } from "../../components";
 import { COLORS, icons, SIZES } from "../../constants";
 import useFetch from "../../hook/useFetch";
-import { Share } from "react-native";
-const tabs = ["About", "Qualifications", "Responsibilities"];
-import { collection, addDoc, getDoc, setDoc, doc } from "firebase/firestore";
-import { auth, db } from "../firebase"; // assuming you have a firebase config file
 import { showToast } from "../../utils";
+import { auth, db } from "../firebase"; // assuming you have a firebase config file
+const tabs = ["About", "Qualifications", "Responsibilities"];
 
 const JobDetails = () => {
   const params = useSearchParams();
@@ -40,13 +40,12 @@ const JobDetails = () => {
 
   useEffect(() => {
     const fetchJobDetails = async () => {
-      const docRef = doc(db, "jobs", userId);
+      const docRef = doc(db, "likedJobs", userId, "jobs", params.id);
       const docSnap = await getDoc(docRef);
       try {
         if (docSnap.exists()) {
-          setJob(docSnap.data());
           const userId = auth.currentUser.uid;
-          const jobDocRef = doc(db, `likedJobs/${userId}/jobs`, userId);
+          const jobDocRef = doc(db, "likedJobs", userId, "jobs", params.id);
           const jobDocSnap = await getDoc(jobDocRef);
           if (jobDocSnap.exists()) {
             setIsLiked(true);
@@ -68,7 +67,7 @@ const JobDetails = () => {
     setRefreshing(true);
     refetch();
     setRefreshing(false);
-  }, []);
+  }, [userId, params.id]);
 
   const displayTabContent = () => {
     switch (activeTab) {
@@ -105,6 +104,7 @@ const JobDetails = () => {
 
     if (jobDocSnap.exists()) {
       // The job is already liked, so we don't do anything
+      setIsLiked(true);
       showToast("Job is already liked");
     } else {
       const jobDetailsObject = {
@@ -113,6 +113,7 @@ const JobDetails = () => {
         jobCountry: data[0].job_country,
         jobLogo: data[0].employer_logo,
         jobId: data[0].job_id,
+        type: "api",
       };
       await setDoc(jobDocRef, jobDetailsObject);
       setIsLiked(true);
@@ -164,7 +165,7 @@ const JobDetails = () => {
           {isLoading ? (
             <ActivityIndicator size="large" color={COLORS.primary} />
           ) : error ? (
-            <Text>Something went wrong</Text>
+            <Text> {error.message}Something went wrong</Text>
           ) : data.length === 0 ? (
             <Text>No data available</Text>
           ) : (

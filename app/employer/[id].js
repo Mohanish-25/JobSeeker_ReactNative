@@ -1,27 +1,25 @@
+import { useRoute } from "@react-navigation/native";
+import { Stack, useRouter } from "expo-router";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
-  Text,
-  View,
+  ActivityIndicator,
   SafeAreaView,
   ScrollView,
-  ActivityIndicator,
+  Share,
+  Text,
+  View,
 } from "react-native";
-import { doc, getDoc, addDoc, collection, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
 import {
   Company,
   JobAbout,
-  JobTabs,
-  Specifics,
   JobFooter,
+  JobTabs,
   ScreenHeaderBtn,
 } from "../../components";
 import { COLORS, icons, SIZES } from "../../constants";
-import { useRoute } from "@react-navigation/native";
-import { Stack } from "expo-router";
-import { Share } from "react-native";
-import { useRouter } from "expo-router";
 import { showToast } from "../../utils";
+import { auth, db } from "../firebase";
 
 const tabs = ["About", "Qualifications", "Responsibilities"];
 
@@ -73,6 +71,7 @@ function EmployerCreatedJobs({}) {
     if (jobDocSnap.exists()) {
       // The job is already liked, so we don't do anything
       console.log("Job already liked");
+      setIsLiked(true);
       showToast("Job is already liked");
     } else {
       const jobDetailsObject = {
@@ -81,6 +80,7 @@ function EmployerCreatedJobs({}) {
         jobCountry: "India",
         jobLogo: "logo here",
         jobId: job.id,
+        type: "employer",
       };
       await setDoc(jobDocRef, jobDetailsObject);
       setIsLiked(true);
