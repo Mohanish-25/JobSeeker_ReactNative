@@ -4,10 +4,19 @@ import styles from './EmployerCard.style';
 import { useNavigation } from '@react-navigation/native';
 import Linkedin from '../../../../assets/icons/linkedin.png'
 import Logo from '../../../../assets/logo.png'
+import { router, useRouter } from 'expo-router';
 const EmployerCard = ({ job }) => {
+    const router = useRouter();
     const navigation = useNavigation();
     return (
-        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('employer/EmployerCreatedJobs')}>
+        <TouchableOpacity style={styles.container} onPress={() => {
+            console.log(job.id);
+            // router.push(`/employer/${job.id}`);
+
+            navigation.navigate('employer/[id]', { id: job.id })
+        }
+        }
+        >
             <View style={styles.cardsContainer}>
                 <TouchableOpacity style={styles.logoContainer}>
                     <Image
