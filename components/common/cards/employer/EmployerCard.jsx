@@ -3,32 +3,32 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import styles from './EmployerCard.style';
 import { useNavigation } from '@react-navigation/native';
 import Linkedin from '../../../../assets/icons/linkedin.png'
+import Logo from '../../../../assets/logo.png'
 const EmployerCard = ({ job }) => {
     const navigation = useNavigation();
     return (
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('employer/EmployerCreatedJobs')}>
             <View style={styles.cardsContainer}>
-                <TouchableOpacity>
+                <TouchableOpacity style={styles.logoContainer}>
                     <Image
-                        source={Linkedin}
-                        style={styles.companyLogo}
+                        source={Logo}
+                        style={styles.logoImage}
                         resizeMode='contain'
                     />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('employer/EmployerCreatedJobs')}>
-                    <View>
-                        <Text style={styles.companyName} numberOfLines={1}>
-                            'Company Name'
+
+                <View>
+                    <Text style={styles.companyName} numberOfLines={1}>
+                        {job.companyName}
+                    </Text>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.jobRole} numberOfLines={1}>
+                            {job.jobRole}
                         </Text>
-                        <View style={styles.infoContainer}>
-                            <Text style={styles.jobRole} numberOfLines={1}>
-                                {job.jobRole}
-                            </Text>
-                        </View>
                     </View>
-                </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 

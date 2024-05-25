@@ -17,7 +17,7 @@ import {
 import { ScrollView } from "react-native";
 import BottomBar from "../../components/BottomBar";
 import { useNavigation } from "@react-navigation/native";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../../app/firebase";
 import { COLORS } from "../../constants";
 
@@ -31,16 +31,22 @@ function createJobs() {
 
   const handleSubmit = async () => {
     try {
-      await addDoc(collection(db, "jobs"), {
+      const employerDoc = await getDoc(
+        doc(db, "employers", auth.currentUser.uid)
+      );
+      console.log("Employer document data: ", employerDoc.data());
+      const companyName = employerDoc.data().companyName;
+
+      const docRef = await addDoc(collection(db, "jobs"), {
         jobRole: jobRole,
         qualifications: qualifications,
         responsibilities: responsibilities,
         about: about,
         employerId: auth.currentUser.uid,
-        companyName: auth.companyName,
-        // store the ID of the employer who posted the job
-        // companyName: auth.currentUser.displayName, // assuming the company name is stored in displayName
+        companyName: companyName,
       });
+      const id = docRef.id;
+      await updateDoc(docRef, { id: id });
       navigation.navigate("employer/employerHome");
       console.log("Job posted successfully");
     } catch (e) {

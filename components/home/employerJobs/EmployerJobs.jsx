@@ -21,8 +21,8 @@ const EmployerJobs = () => {
                 setJobs(querySnapshot.docs.map((doc) => doc.data()));
                 setIsLoading(false);
             } catch (err) {
-                setError(err.message);
                 setIsLoading(false);
+                setError(err.message);
             }
         };
         fetchJobs();
@@ -46,7 +46,7 @@ const EmployerJobs = () => {
                         data={jobs}
                         contentContainerStyle={{ columnGap: SIZES.medium }}
                         horizontal
-                        keyExtractor={(index) => index.toString()}
+                        keyExtractor={(item, index) => item.id.toString()}
                         renderItem={({ item }) => <EmployerCard job={item} />}
                     />
                 )}
