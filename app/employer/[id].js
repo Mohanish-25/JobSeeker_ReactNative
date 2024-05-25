@@ -6,8 +6,8 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { doc, getDoc, addDoc, collection, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 import {
   Company,
   JobAbout,
@@ -21,6 +21,7 @@ import { useRoute } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { Share } from "react-native";
 import { useRouter } from "expo-router";
+import { showToast } from "../../utils";
 
 const tabs = ["About", "Qualifications", "Responsibilities"];
 
@@ -32,6 +33,7 @@ function EmployerCreatedJobs({}) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -41,6 +43,15 @@ function EmployerCreatedJobs({}) {
 
         if (docSnap.exists()) {
           setJob(docSnap.data());
+          const userId = auth.currentUser.uid;
+          const jobDocRef = doc(db, `likedJobs/${userId}/jobs`, id);
+          const jobDocSnap = await getDoc(jobDocRef);
+
+          if (jobDocSnap.exists()) {
+            setIsLiked(true);
+          } else {
+            setIsLiked(false);
+          }
         } else {
           setError("No such document!");
         }
@@ -53,6 +64,28 @@ function EmployerCreatedJobs({}) {
 
     fetchJobDetails();
   }, [id]);
+
+  const handleLike = async () => {
+    const userId = auth.currentUser.uid;
+    const jobDocRef = doc(db, `likedJobs/${userId}/jobs`, job.id);
+    const jobDocSnap = await getDoc(jobDocRef);
+
+    if (jobDocSnap.exists()) {
+      // The job is already liked, so we don't do anything
+      console.log("Job already liked");
+      showToast("Job is already liked");
+    } else {
+      const jobDetailsObject = {
+        jobTitle: job.jobRole,
+        employerName: job.companyName,
+        jobCountry: "India",
+        jobLogo: "logo here",
+        jobId: job.id,
+      };
+      await setDoc(jobDocRef, jobDetailsObject);
+      setIsLiked(true);
+    }
+  };
 
   const displayTabContent = () => {
     switch (activeTab) {
@@ -153,6 +186,11 @@ function EmployerCreatedJobs({}) {
             </View>
           )}
         </ScrollView>
+        <JobFooter
+          url={"https://careers.google.com/jobs/results/"}
+          onLike={handleLike}
+          isLiked={isLiked}
+        />
       </SafeAreaView>
     </>
   );

@@ -1,5 +1,5 @@
 import { Stack, useRouter, useSearchParams } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -21,19 +21,48 @@ import { COLORS, icons, SIZES } from "../../constants";
 import useFetch from "../../hook/useFetch";
 import { Share } from "react-native";
 const tabs = ["About", "Qualifications", "Responsibilities"];
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDoc, setDoc, doc } from "firebase/firestore";
 import { auth, db } from "../firebase"; // assuming you have a firebase config file
+import { showToast } from "../../utils";
 
 const JobDetails = () => {
   const params = useSearchParams();
   const router = useRouter();
+  const userId = auth.currentUser.uid;
 
   const { data, isLoading, error, refetch } = useFetch("job-details", {
     job_id: params.id,
   });
-
+  const [err, setError] = useState(null);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [refreshing, setRefreshing] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      const docRef = doc(db, "jobs", userId);
+      const docSnap = await getDoc(docRef);
+      try {
+        if (docSnap.exists()) {
+          setJob(docSnap.data());
+          const userId = auth.currentUser.uid;
+          const jobDocRef = doc(db, `likedJobs/${userId}/jobs`, userId);
+          const jobDocSnap = await getDoc(jobDocRef);
+          if (jobDocSnap.exists()) {
+            setIsLiked(true);
+          } else {
+            setIsLiked(false);
+          }
+        } else {
+          setError("No such document!", err.message);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchJobDetails();
+  }, [userId]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -71,20 +100,23 @@ const JobDetails = () => {
 
   const handleLike = async () => {
     const userId = auth.currentUser.uid;
-    const likedJobsRef = collection(db, `likedJobs/${userId}/jobs`);
+    const jobDocRef = doc(db, `likedJobs/${userId}/jobs`, data[0].job_id);
+    const jobDocSnap = await getDoc(jobDocRef);
 
-    // Create a new object with only the properties you want to save
-    const jobDetailsObject = {
-      jobTitle: data[0].job_title,
-      employerName: data[0].employer_name,
-      jobCountry: data[0].job_country,
-      jobLogo: data[0].employer_logo,
-      jobId: data[0].job_id,
-
-      // Add more properties here
-    };
-
-    await addDoc(likedJobsRef, jobDetailsObject);
+    if (jobDocSnap.exists()) {
+      // The job is already liked, so we don't do anything
+      showToast("Job is already liked");
+    } else {
+      const jobDetailsObject = {
+        jobTitle: data[0].job_title,
+        employerName: data[0].employer_name,
+        jobCountry: data[0].job_country,
+        jobLogo: data[0].employer_logo,
+        jobId: data[0].job_id,
+      };
+      await setDoc(jobDocRef, jobDetailsObject);
+      setIsLiked(true);
+    }
   };
 
   return (
@@ -161,6 +193,7 @@ const JobDetails = () => {
             "https://careers.google.com/jobs/results/"
           }
           onLike={handleLike}
+          isLiked={isLiked}
         />
       </>
     </SafeAreaView>
