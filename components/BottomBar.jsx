@@ -38,8 +38,8 @@ const BottomBar = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        position: 'absolute', // Add this line
-        bottom: 0, // And this line
+        // position: 'absolute', // Add this line
+        // bottom: 0, // And this line
         justifyContent: 'space-around',
         padding: 8,
         backgroundColor: COLORS.lightWhite,

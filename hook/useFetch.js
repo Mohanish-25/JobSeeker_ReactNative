@@ -7,6 +7,7 @@ const useFetch = (endpoint, query) => {
   const [error, setError] = useState(null);
 
   const apiKeys = [
+    process.env.REACT_APP_API_KEY_5,
     process.env.REACT_APP_API_KEY_2,
     process.env.REACT_APP_API_KEY_3,
     process.env.REACT_APP_API_KEY_1,

@@ -1,19 +1,21 @@
-import { useNavigation } from "@react-navigation/native";
-import { Stack, useRouter } from "expo-router";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
-import profileIcon from "../assets/logo.png";
+import { Stack, useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import { COLORS, icons, images, SIZES } from "../constants";
 import {
   Nearbyjobs,
   Popularjobs,
   ScreenHeaderBtn,
   Welcome,
 } from "../components";
-import { COLORS, icons, SIZES } from "../constants";
+import { BackHandler } from "react-native";
+import profileIcon from "../assets/logo.png";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 // import EmployerCard from "../components/common/EmployerCard";
-import EmployerJobs from "../components/home/employerJobs/EmployerJobs";
 import { showToast } from "../utils";
+import EmployerJobs from "../components/home/employerJobs/EmployerJobs";
+import Toast from "react-native-toast-message";
 
 const Home = () => {
   const router = useRouter();
@@ -129,6 +131,7 @@ const Home = () => {
           <EmployerJobs />
           <Nearbyjobs />
         </View>
+        <Toast />
       </ScrollView>
     </SafeAreaView>
   );

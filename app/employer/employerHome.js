@@ -14,6 +14,7 @@ import BottomBar from "../../components/BottomBar";
 import EmployerJobs from "../../components/home/employerJobs/EmployerJobs";
 import { COLORS, icons, SIZES } from "../../constants";
 import { showToast } from "../../utils";
+import Toast from "react-native-toast-message";
 
 const employerHome = () => {
   const router = useRouter();
@@ -52,7 +53,7 @@ const employerHome = () => {
                 {
                   label: "Employer Profile",
                   icon: "account",
-                  action: () => showToast("Profile Coming Soon"),
+                  action: () => navigation.navigate("employer/employerProfile"),
                 },
                 {
                   label: "Saved Jobs",
@@ -103,30 +104,35 @@ const employerHome = () => {
           headerTitle: "",
         }}
       />
-
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            flex: 1,
-            padding: SIZES.medium,
-          }}
+      <View style={{ flex: 1, flexDirection: "column" }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ paddingBottom: 60 }}
         >
-          <Welcome
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            handleClick={() => {
-              if (searchTerm) {
-                router.push(`/search/${searchTerm}`);
-              }
+          <View
+            style={{
+              flex: 1,
+              padding: SIZES.medium,
             }}
-          />
+          >
+            <Welcome
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              handleClick={() => {
+                if (searchTerm) {
+                  router.push(`/search/${searchTerm}`);
+                }
+              }}
+            />
 
-          <Popularjobs />
-          <EmployerJobs />
-          <Nearbyjobs />
-        </View>
-      </ScrollView>
-      <BottomBar navigation={navigation} />
+            <Popularjobs />
+            <EmployerJobs />
+            <Nearbyjobs />
+          </View>
+          <Toast />
+        </ScrollView>
+        <BottomBar navigation={navigation} />
+      </View>
     </SafeAreaView>
   );
 };

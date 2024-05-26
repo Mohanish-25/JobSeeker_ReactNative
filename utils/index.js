@@ -1,4 +1,4 @@
-import { ToastAndroid } from "react-native";
+import Toast from "react-native-toast-message";
 
 export const checkImageURL = (url) => {
   if (!url) return false;
@@ -12,5 +12,22 @@ export const checkImageURL = (url) => {
 };
 
 export const showToast = (message) => {
-  ToastAndroid.show(message, ToastAndroid.SHORT);
+  console.log("showToast", message);
+  Toast.show({
+    position: "top",
+    topOffset: 10,
+    text2: "",
+    type: "info",
+    text1: message,
+    visibilityTime: 2000,
+    autoHide: true,
+    swipeable: true,
+    autoHide: true,
+    text1Style: {
+      fontSize: 16,
+      color: "black",
+      fontWeight: "800",
+      backgroundColor: "white",
+    },
+  });
 };
