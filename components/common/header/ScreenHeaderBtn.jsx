@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Image, TouchableOpacity, Modal, View, Text, TouchableHighlight, TouchableWithoutFeedback } from "react-native";
-import styles from "./screenheader.style";
+import React, { useEffect, useState } from 'react';
+import { Animated, Image, Modal, Text, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Animated } from 'react-native';
+import styles from "./screenheader.style";
 
 const ScreenHeaderBtn = ({ iconUrl, dimension, handlePress, options, showModal }) => {
   const [modalVisible, setModalVisible] = useState(false);

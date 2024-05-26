@@ -1,4 +1,12 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { Ionicons } from "@expo/vector-icons";
+import { Stack, useRouter } from "expo-router";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   FlatList,
@@ -7,12 +15,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth, db } from "./firebase";
-import { Ionicons } from "@expo/vector-icons";
-import { Stack, useRouter } from "expo-router";
-import { deleteDoc } from "firebase/firestore";
 import { ScreenHeaderBtn } from "../components";
 import { COLORS, icons } from "../constants";
+import { auth, db } from "./firebase";
 
 const LikedJobsScreen = () => {
   const [likedJobs, setLikedJobs] = useState([]);

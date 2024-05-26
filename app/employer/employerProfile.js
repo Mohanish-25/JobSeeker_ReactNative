@@ -1,9 +1,9 @@
+import { useNavigation } from "@react-navigation/native";
+import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { auth, db } from "../../app/firebase";
 import BottomBar from "../../components/BottomBar";
-import { useNavigation } from "@react-navigation/native";
-import { getDoc, doc } from "firebase/firestore";
-import { db, auth } from "../../app/firebase";
 import { COLORS } from "../../constants";
 
 function employerProfile(props) {

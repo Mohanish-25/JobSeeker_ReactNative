@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { Image, Text, View } from "react-native";
 
-import styles from "./company.style";
 import { icons } from "../../../constants";
 import { checkImageURL } from "../../../utils";
+import styles from "./company.style";
 
 const Company = ({ companyLogo, jobTitle, companyName, location }) => {
   return (

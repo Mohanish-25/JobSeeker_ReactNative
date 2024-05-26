@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { FONT, SIZES, COLORS, SHADOWS } from "../../../../constants";
+import { COLORS, FONT, SHADOWS, SIZES } from "../../../../constants";
 
 const styles = StyleSheet.create({
   cardsContainer: {

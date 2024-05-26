@@ -1,22 +1,21 @@
-import React, { useState } from "react";
-import { Button, TextInput, View, StyleSheet, Text, Image } from "react-native";
-import { Stack, useRouter } from "expo-router";
-import { COLORS, icons, images, SIZES } from "../constants";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import {
+  createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Formik } from "formik";
+import React, { useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Yup from "yup";
-import ErrorMessage from "../components/ErrorMessage";
 import AppTextInput from "../components/AppTextInput";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ErrorMessage from "../components/ErrorMessage";
+import { COLORS } from "../constants";
 
-import Logo from "../assets/logo.png";
 import { doc } from "firebase/firestore";
+import Logo from "../assets/logo.png";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),

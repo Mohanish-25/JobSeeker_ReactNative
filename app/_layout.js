@@ -1,19 +1,11 @@
-import { Stack } from "expo-router";
-import { useFonts } from "expo-font";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { ActivityIndicator } from "react-native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, doc, getDoc } from "firebase/firestore";
+import { useEffect } from "react";
+import { ActivityIndicator } from "react-native";
 import { db } from "./firebase";
-// import * as SplashScreen from "expo-splash-screen";
-
-// SplashScreen.preventAutoHideAsync();
-
-// export const unstable_settings = {
-//   // Ensure any route can link back to `/`
-//   initialRouteName: "auth",
-// };
 
 const Layout = () => {
   const [fontsLoaded] = useFonts({

@@ -1,24 +1,16 @@
-import React from "react";
 import {
-  View,
-  TextInput,
-  Button,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
-import AppTextInput from "../../components/AppTextInput";
-import {
-  MaterialCommunityIcons,
   AntDesign,
   Feather,
+  MaterialCommunityIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
-import { ScrollView } from "react-native";
-import BottomBar from "../../components/BottomBar";
 import { useNavigation } from "@react-navigation/native";
 import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
-import { db, auth } from "../../app/firebase";
+import React from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { auth, db } from "../../app/firebase";
+import AppTextInput from "../../components/AppTextInput";
+import BottomBar from "../../components/BottomBar";
 import { COLORS } from "../../constants";
 
 function createJobs() {

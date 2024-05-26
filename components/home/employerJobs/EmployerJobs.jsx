@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import styles from './employerjobs.style';
+import { collection, getDocs } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { db } from '../../../app/firebase';
 import { COLORS, SIZES } from '../../../constants';
 import { showToast } from '../../../utils';
-import { db } from '../../../app/firebase';
-import { collection, getDocs } from 'firebase/firestore';
 import EmployerCard from '../../common/cards/employer/EmployerCard';
+import styles from './employerjobs.style';
 
 const EmployerJobs = () => {
     const [isLoading, setIsLoading] = useState(true);
