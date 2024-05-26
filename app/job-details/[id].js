@@ -1,4 +1,5 @@
-import { Stack, useRouter, useSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+
 import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -26,7 +27,7 @@ import { auth, db } from "../firebase"; // assuming you have a firebase config f
 const tabs = ["About", "Qualifications", "Responsibilities"];
 
 const JobDetails = () => {
-  const params = useSearchParams();
+  const params = useLocalSearchParams();
   const router = useRouter();
   const userId = auth.currentUser.uid;
 

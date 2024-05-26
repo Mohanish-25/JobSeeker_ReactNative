@@ -15,7 +15,7 @@ import {
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 import * as Yup from "yup";
 import Logo from "../../assets/logo.png";
 import AppTextInput from "../../components/AppTextInput";
