@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         position: 'absolute', // Add this line
         bottom: 0, // And this line
         justifyContent: 'space-around',
-        padding: 10,
+        padding: 8,
         backgroundColor: COLORS.lightWhite,
         width: '100%',
     },

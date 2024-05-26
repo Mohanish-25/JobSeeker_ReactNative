@@ -9,7 +9,7 @@ import {
   Welcome,
 } from "../../components";
 import { BackHandler } from "react-native";
-import profileIcon from "../../assets/logo.png";
+import profileIcon from "../../assets/icon2.png";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { COLORS, icons, images, SIZES } from "../../constants";
 import createJobs from "./createJobs";

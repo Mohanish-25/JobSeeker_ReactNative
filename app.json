@@ -1,12 +1,17 @@
 {
   "expo": {
-    "scheme": "acme",
+    "scheme": "jobcentral",
     "web": {
       "bundler": "metro"
     },
     "name": "JobCentral",
     "slug": "jobcentral",
-    "icon": "./assets/icon2.png",
+    "icon": "./assets/applogo.png",
+    "splash": {
+      "image": "./assets/icon2.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "android": {
       "package": "com.bankugrp.jobseeker",
       "adaptiveIcon": {

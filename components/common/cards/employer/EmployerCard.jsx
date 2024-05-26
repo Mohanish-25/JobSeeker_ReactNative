@@ -1,10 +1,9 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import styles from './EmployerCard.style';
 import { useNavigation } from '@react-navigation/native';
-import Linkedin from '../../../../assets/icons/linkedin.png'
-import Logo from '../../../../assets/logo.png'
-import { router, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import Logo from '../../../../assets/logo.png';
+import styles from './EmployerCard.style';
 const EmployerCard = ({ job }) => {
     const router = useRouter();
     const navigation = useNavigation();

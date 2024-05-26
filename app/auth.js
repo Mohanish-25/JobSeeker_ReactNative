@@ -16,6 +16,7 @@ import AppTextInput from "../components/AppTextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Logo from "../assets/logo.png";
+import { doc } from "firebase/firestore";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
