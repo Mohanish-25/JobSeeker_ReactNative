@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { TouchableOpacity, FlatList, Text, View } from "react-native";
+import React from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
-import styles from "./tabs.style";
 import { SIZES } from "../../../constants";
+import styles from "./tabs.style";
 
 function TabButton({ name, activeTab, onHandleSearchType }) {
   return (

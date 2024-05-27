@@ -1,14 +1,17 @@
-import { Stack, useRouter, useSearchParams } from "expo-router";
-import { useCallback, useState } from "react";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+
+import { useCallback, useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
   ActivityIndicator,
   RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { Share } from "react-native";
 import {
   Company,
   JobAbout,
@@ -19,27 +22,53 @@ import {
 } from "../../components";
 import { COLORS, icons, SIZES } from "../../constants";
 import useFetch from "../../hook/useFetch";
-import { Share } from "react-native";
-const tabs = ["About", "Qualifications", "Responsibilities"];
-import { collection, addDoc } from "firebase/firestore";
+import { showToast } from "../../utils";
 import { auth, db } from "../firebase"; // assuming you have a firebase config file
+const tabs = ["About", "Qualifications", "Responsibilities"];
 
 const JobDetails = () => {
-  const params = useSearchParams();
+  const params = useLocalSearchParams();
   const router = useRouter();
+  const userId = auth.currentUser.uid;
 
   const { data, isLoading, error, refetch } = useFetch("job-details", {
     job_id: params.id,
   });
-
+  const [err, setError] = useState(null);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [refreshing, setRefreshing] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      const docRef = doc(db, "likedJobs", userId, "jobs", params.id);
+      const docSnap = await getDoc(docRef);
+      try {
+        if (docSnap.exists()) {
+          const userId = auth.currentUser.uid;
+          const jobDocRef = doc(db, "likedJobs", userId, "jobs", params.id);
+          const jobDocSnap = await getDoc(jobDocRef);
+          if (jobDocSnap.exists()) {
+            setIsLiked(true);
+          } else {
+            setIsLiked(false);
+          }
+        } else {
+          setError("No such document!", err.message);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchJobDetails();
+  }, [userId]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     refetch();
     setRefreshing(false);
-  }, []);
+  }, [userId, params.id]);
 
   const displayTabContent = () => {
     switch (activeTab) {
@@ -71,20 +100,25 @@ const JobDetails = () => {
 
   const handleLike = async () => {
     const userId = auth.currentUser.uid;
-    const likedJobsRef = collection(db, `likedJobs/${userId}/jobs`);
+    const jobDocRef = doc(db, `likedJobs/${userId}/jobs`, data[0].job_id);
+    const jobDocSnap = await getDoc(jobDocRef);
 
-    // Create a new object with only the properties you want to save
-    const jobDetailsObject = {
-      jobTitle: data[0].job_title,
-      employerName: data[0].employer_name,
-      jobCountry: data[0].job_country,
-      jobLogo: data[0].employer_logo,
-      jobId: data[0].job_id,
-
-      // Add more properties here
-    };
-
-    await addDoc(likedJobsRef, jobDetailsObject);
+    if (jobDocSnap.exists()) {
+      // The job is already liked, so we don't do anything
+      setIsLiked(true);
+      showToast("Job is already liked");
+    } else {
+      const jobDetailsObject = {
+        jobTitle: data[0].job_title,
+        employerName: data[0].employer_name,
+        jobCountry: data[0].job_country,
+        jobLogo: data[0].employer_logo,
+        jobId: data[0].job_id,
+        type: "api",
+      };
+      await setDoc(jobDocRef, jobDetailsObject);
+      setIsLiked(true);
+    }
   };
 
   return (
@@ -132,7 +166,7 @@ const JobDetails = () => {
           {isLoading ? (
             <ActivityIndicator size="large" color={COLORS.primary} />
           ) : error ? (
-            <Text>Something went wrong</Text>
+            <Text> {error.message}Something went wrong</Text>
           ) : data.length === 0 ? (
             <Text>No data available</Text>
           ) : (
@@ -161,6 +195,7 @@ const JobDetails = () => {
             "https://careers.google.com/jobs/results/"
           }
           onLike={handleLike}
+          isLiked={isLiked}
         />
       </>
     </SafeAreaView>

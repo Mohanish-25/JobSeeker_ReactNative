@@ -1,24 +1,16 @@
-import React from "react";
 import {
-  View,
-  TextInput,
-  Button,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
-import AppTextInput from "../../components/AppTextInput";
-import {
-  MaterialCommunityIcons,
   AntDesign,
   Feather,
+  MaterialCommunityIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
-import { ScrollView } from "react-native";
-import BottomBar from "../../components/BottomBar";
 import { useNavigation } from "@react-navigation/native";
-import { addDoc, collection } from "firebase/firestore";
-import { db, auth } from "../../app/firebase";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import React from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { auth, db } from "../../app/firebase";
+import AppTextInput from "../../components/AppTextInput";
+import BottomBar from "../../components/BottomBar";
 import { COLORS } from "../../constants";
 
 function createJobs() {
@@ -31,14 +23,22 @@ function createJobs() {
 
   const handleSubmit = async () => {
     try {
-      await addDoc(collection(db, "jobs"), {
+      const employerDoc = await getDoc(
+        doc(db, "employers", auth.currentUser.uid)
+      );
+      console.log("Employer document data: ", employerDoc.data());
+      const companyName = employerDoc.data().companyName;
+
+      const docRef = await addDoc(collection(db, "jobs"), {
         jobRole: jobRole,
         qualifications: qualifications,
         responsibilities: responsibilities,
         about: about,
-        employerId: auth.currentUser.uid, // store the ID of the employer who posted the job
-        // companyName: auth.currentUser.displayName, // assuming the company name is stored in displayName
+        employerId: auth.currentUser.uid,
+        companyName: companyName,
       });
+      const id = docRef.id;
+      await updateDoc(docRef, { id: id });
       navigation.navigate("employer/employerHome");
       console.log("Job posted successfully");
     } catch (e) {

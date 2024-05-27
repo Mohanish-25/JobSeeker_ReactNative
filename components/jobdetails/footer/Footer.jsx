@@ -1,9 +1,6 @@
-import { View, Text, TouchableOpacity, Image, Linking } from "react-native";
-import * as firebase from 'firebase/app';
-import styles from "./footer.style";
+import { Image, Linking, Text, TouchableOpacity, View } from "react-native";
 import { icons } from "../../../constants";
-import { addDoc, collection } from "firebase/firestore";
-import { auth, db } from "../../../app/firebase";
+import styles from "./footer.style";
 const Footer = ({ url, onLike, isLiked }) => {
 
 

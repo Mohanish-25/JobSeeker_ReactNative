@@ -1,17 +1,17 @@
-import { useState } from "react";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
-  View,
+  ActivityIndicator,
+  FlatList,
   Text,
   TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
+  View,
 } from "react-native";
 
-import styles from "./popularjobs.style";
 import { COLORS, SIZES } from "../../../constants";
-import PopularJobCard from "../../common/cards/popular/PopularJobCard";
 import useFetch from "../../../hook/useFetch";
+import PopularJobCard from "../../common/cards/popular/PopularJobCard";
+import styles from "./popularjobs.style";
 
 const Popularjobs = () => {
   const router = useRouter();

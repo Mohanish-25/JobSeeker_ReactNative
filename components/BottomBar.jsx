@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { COLORS } from '../constants';
-import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useRoute } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { COLORS } from '../constants';
 
 const BottomBar = ({ navigation }) => {
     const route = useRoute();
@@ -39,10 +38,10 @@ const BottomBar = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        position: 'absolute', // Add this line
-        bottom: 0, // And this line
+        // position: 'absolute', // Add this line
+        // bottom: 0, // And this line
         justifyContent: 'space-around',
-        padding: 10,
+        padding: 8,
         backgroundColor: COLORS.lightWhite,
         width: '100%',
     },

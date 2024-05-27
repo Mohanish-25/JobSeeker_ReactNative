@@ -1,9 +1,9 @@
+import { Stack, useRouter } from "expo-router";
 import React from "react";
-import { SafeAreaView, StyleSheet, View, Text, Linking } from "react-native";
-import { COLORS, icons, SIZES } from "../constants";
-import { ScreenHeaderBtn } from "../components";
-import { Stack, router, useRouter } from "expo-router";
+import { Linking, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { Icon } from "react-native-elements";
+import { ScreenHeaderBtn } from "../components";
+import { COLORS, icons } from "../constants";
 
 function About(props) {
   const router = useRouter();
@@ -38,7 +38,7 @@ function About(props) {
       type: "font-awesome",
       icon: "twitter",
     },
-    // add more social links as needed
+    //  more social links as needed
   ];
 
   return (

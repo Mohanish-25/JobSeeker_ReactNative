@@ -1,39 +1,43 @@
-import { doc, collection, getDocs } from "firebase/firestore";
-import { auth, db } from "./firebase"; // assuming you have a firebase config file
-import { useState, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { Stack, useRouter } from "expo-router";
 import {
-  StyleSheet,
-  View,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import {
   FlatList,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  Image,
+  View,
 } from "react-native";
-// import styles from "../components/common/cards/nearby/nearbyjobcard.style";
-import { checkImageURL } from "../utils";
-import { Stack, useRouter } from "expo-router";
 import { ScreenHeaderBtn } from "../components";
 import { COLORS, icons } from "../constants";
+import { auth, db } from "./firebase";
+
 const LikedJobsScreen = () => {
   const [likedJobs, setLikedJobs] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchLikedJobs = async () => {
-      const userId = auth.currentUser.uid;
-      const likedJobsRef = collection(db, `likedJobs/${userId}/jobs`);
-
-      const likedJobsSnapshot = await getDocs(likedJobsRef);
-      const likedJobsList = likedJobsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setLikedJobs(likedJobsList);
-    };
-
     fetchLikedJobs();
   }, []);
+
+  const fetchLikedJobs = async () => {
+    const userId = auth.currentUser.uid;
+    const likedJobsRef = collection(db, `likedJobs/${userId}/jobs`);
+    const likedJobsSnapshot = await getDocs(likedJobsRef);
+    const likedJobsList = likedJobsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    setLikedJobs(likedJobsList);
+  };
 
   return (
     <>
@@ -59,18 +63,52 @@ const LikedJobsScreen = () => {
             <>
               <TouchableOpacity
                 style={styles.jobItem}
-                onPress={() => router.push(`/job-details/${item.job_id} `)}
+                onPress={async () => {
+                  const userId = auth.currentUser.uid;
+                  const jobRef = doc(db, `likedJobs/${userId}/jobs`, item.id);
+                  const jobSnapshot = await getDoc(jobRef);
+                  console.log(item);
+                  if (jobSnapshot.exists()) {
+                    const jobData = jobSnapshot.data();
+                    if (jobData.type === "employer") {
+                      router.push(`/employer/${item.jobId}`);
+                    } else if (jobData.type === "api") {
+                      router.push(`/job-details/${item.jobId}`);
+                    }
+                  }
+                }}
               >
-                <Text style={styles.jobTitle}>{item.jobTitle}</Text>
-                <Text style={styles.employerName}>{item.employerName}</Text>
-                <Text>{item.jobCountry}</Text>
+                {/* 
+               
                 <Image
                   source={{
-                    uri: checkImageURL(item.jobLogo)
-                      ? item.jobLogo
-                      : "https://t4.ftcdn.net/jpg/05/05/61/73/360_F_505617309_NN1CW7diNmGXJfMicpY9eXHKV4sqzO5H.jpg",
+                    uri:
+                      item.jobLogo !== "logo here"
+                        ? item.jobLogo
+                        : "https://www.kindpng.com/picc/m/78-785827_user-profile-avatar",
                   }}
-                />
+                  style={{ width: 50, height: 50 }}
+                /> */}
+                <View>
+                  <Text style={styles.jobTitle}>{item.jobTitle}</Text>
+                  <Text style={styles.employerName}>{item.employerName}</Text>
+                  <Text style={styles.employerName}>{item.jobCountry}</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={async () => {
+                    const userId = auth.currentUser.uid;
+                    const likedJobRef = doc(
+                      db,
+                      `likedJobs/${userId}/jobs`,
+                      item.id
+                    );
+                    await deleteDoc(likedJobRef);
+                    // Fetch the updated list of liked jobs
+                    fetchLikedJobs();
+                  }}
+                >
+                  <Ionicons name="trash-outline" size={24} color="red" />
+                </TouchableOpacity>
               </TouchableOpacity>
             </>
           )}
@@ -91,6 +129,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     borderRadius: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   jobTitle: {
     fontSize: 18,

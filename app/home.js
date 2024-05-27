@@ -12,8 +12,10 @@ import {
 import { BackHandler } from "react-native";
 import profileIcon from "../assets/logo.png";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import EmployerCard from "../components/common/EmployerCard";
+// import EmployerCard from "../components/common/EmployerCard";
 import { showToast } from "../utils";
+import EmployerJobs from "../components/home/employerJobs/EmployerJobs";
+import Toast from "react-native-toast-message";
 
 const Home = () => {
   const router = useRouter();
@@ -126,9 +128,10 @@ const Home = () => {
           />
 
           <Popularjobs />
-          <EmployerCard />
+          <EmployerJobs />
           <Nearbyjobs />
         </View>
+        <Toast />
       </ScrollView>
     </SafeAreaView>
   );

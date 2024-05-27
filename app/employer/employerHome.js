@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
-import { Stack, useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
+import { Stack, useRouter } from "expo-router";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { SafeAreaView, ScrollView, View } from "react-native";
+import profileIcon from "../../assets/icon2.png";
 import {
   Nearbyjobs,
   Popularjobs,
   ScreenHeaderBtn,
   Welcome,
 } from "../../components";
-import { BackHandler } from "react-native";
-import profileIcon from "../../assets/logo.png";
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import { COLORS, icons, images, SIZES } from "../../constants";
-import createJobs from "./createJobs";
 import BottomBar from "../../components/BottomBar";
+import EmployerJobs from "../../components/home/employerJobs/EmployerJobs";
+import { COLORS, icons, SIZES } from "../../constants";
 import { showToast } from "../../utils";
+import Toast from "react-native-toast-message";
 
 const employerHome = () => {
   const router = useRouter();
@@ -53,7 +53,7 @@ const employerHome = () => {
                 {
                   label: "Employer Profile",
                   icon: "account",
-                  action: () => showToast("Profile Coming Soon"),
+                  action: () => navigation.navigate("employer/employerProfile"),
                 },
                 {
                   label: "Saved Jobs",
@@ -104,29 +104,35 @@ const employerHome = () => {
           headerTitle: "",
         }}
       />
-
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            flex: 1,
-            padding: SIZES.medium,
-          }}
+      <View style={{ flex: 1, flexDirection: "column" }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ paddingBottom: 60 }}
         >
-          <Welcome
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            handleClick={() => {
-              if (searchTerm) {
-                router.push(`/search/${searchTerm}`);
-              }
+          <View
+            style={{
+              flex: 1,
+              padding: SIZES.medium,
             }}
-          />
+          >
+            <Welcome
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              handleClick={() => {
+                if (searchTerm) {
+                  router.push(`/search/${searchTerm}`);
+                }
+              }}
+            />
 
-          <Popularjobs />
-          <Nearbyjobs />
-        </View>
-      </ScrollView>
-      <BottomBar navigation={navigation} />
+            <Popularjobs />
+            <EmployerJobs />
+            <Nearbyjobs />
+          </View>
+          <Toast />
+        </ScrollView>
+        <BottomBar navigation={navigation} />
+      </View>
     </SafeAreaView>
   );
 };

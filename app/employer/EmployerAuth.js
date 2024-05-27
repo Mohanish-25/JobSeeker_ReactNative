@@ -5,18 +5,22 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import {
+  collection,
+  doc,
+  getDoc,
+  getFirestore,
+  setDoc,
+} from "firebase/firestore";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import * as Yup from "yup";
-import ErrorMessage from "../../components/ErrorMessage";
-import AppTextInput from "../../components/AppTextInput";
-import { COLORS } from "../../constants";
-import { Stack, useRouter } from "expo-router";
-import { collection, doc, setDoc, getDoc } from "firebase/firestore";
-import { getFirestore } from "firebase/firestore";
 import Logo from "../../assets/logo.png";
+import AppTextInput from "../../components/AppTextInput";
+import ErrorMessage from "../../components/ErrorMessage";
+import { COLORS } from "../../constants";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required().label("Email"),
