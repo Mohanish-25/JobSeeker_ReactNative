@@ -23,12 +23,12 @@ JobCentral is Mobile Application created with React-Native + Expo.
 
 ## Screenshots📷
 
-<div style="display: flex;">
+<p style="display: flex;">
     <img src="https://github.com/Mohanish-25/JobSeeker_ReactNative/assets/84692375/07b5f892-4fd2-414c-a942-8ca91e46fd1b" width="230" style="margin-right: 10px;">
     <img src="https://github.com/Mohanish-25/JobSeeker_ReactNative/assets/84692375/0fb42ac0-66fa-4974-b950-59e00d4b9388" width="230" style="margin-right: 10px;">
     <img src="https://github.com/Mohanish-25/JobSeeker_ReactNative/assets/84692375/d329bd1f-07fa-437a-813f-1bade99e6a59" width="230" style="margin-right: 10px;">
     <img src="https://github.com/Mohanish-25/JobSeeker_ReactNative/assets/84692375/0712b6d1-0067-4fd9-868b-13b6fdc334a1" width="230" style="margin-right: 10px;">
-</div>
+</p>
 
 
 
