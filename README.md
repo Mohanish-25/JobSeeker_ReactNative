@@ -53,4 +53,4 @@ JobCentral is Mobile Application created with React-Native + Expo.
 
 ## Support💬
 
-For support, Email:  kapilbadokar321@gmail.com.
+For support, Email:  mohanisdesale@gmail.com.
